@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_adjustments', function (Blueprint $table) {
+        Schema::create('order_fulfillments', function (Blueprint $table) {
             $table->id();
-            $table->morphs('item');
-            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->date('date');
-            $table->enum('type', ['Credit', 'Debit']);
-            $table->float('qty');
-            $table->text('notes')->nullable();
+            $table->text('delivery_note')->nullable();
             $table->bigInteger('refID');
             $table->timestamps();
         });
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_adjustments');
+        Schema::dropIfExists('order_fulfillments');
     }
 };

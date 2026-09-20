@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('demand_deliveries', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('demand_id')->constrained('demands', 'id')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('accounts');
             $table->date('date');
-            $table->string('vehicle_no')->nullable();
-            $table->string('driver_name')->nullable();
-            $table->float('delivery_charges')->default(0);
-            $table->float('total_amount')->default(0);
-            $table->text('notes')->nullable();
+            $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('advance_paid', 10, 2)->default(0);
+            $table->enum('status', ['pending', 'partially_fulfilled', 'completed', 'cancelled'])->default('pending');
             $table->bigInteger('refID');
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('demand_deliveries');
+        Schema::dropIfExists('orders');
     }
 };

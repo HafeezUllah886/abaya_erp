@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DemandDetail extends Model
+class OrderFulfillmentDetail extends Model
 {
     protected $guarded = [];
-
-    public function demand()
-    {
-        return $this->belongsTo(Demand::class, 'demand_id');
-    }
 
     public function product()
     {
         return $this->belongsTo(products::class, 'product_id');
+    }
+    
+    public function fulfillment()
+    {
+        return $this->belongsTo(OrderFulfillment::class, 'order_fulfillment_id');
     }
 }

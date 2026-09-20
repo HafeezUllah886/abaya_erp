@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('demands', function (Blueprint $table) {
+        Schema::create('order_fulfillment_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('accounts', 'id');
-            $table->string('month'); // e.g. "2026-09"
-            $table->date('date');
-            $table->text('notes')->nullable();
-            $table->string('status')->default('Pending');
-            $table->bigInteger('refID');
+            $table->foreignId('order_fulfillment_id')->constrained('order_fulfillments')->cascadeOnDelete();
+            $table->foreignId('order_detail_id')->constrained('order_details')->cascadeOnDelete();
+            $table->float('qty');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('demands');
+        Schema::dropIfExists('order_fulfillment_details');
     }
 };

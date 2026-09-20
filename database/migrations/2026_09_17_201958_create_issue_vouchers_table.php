@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendants', function (Blueprint $table) {
+        Schema::create('issue_vouchers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('phone')->nullable();
-            $table->text('address')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('tailor_id')->constrained('accounts');
+            $table->date('date');
+            $table->enum('status', ['issued', 'partially_received', 'received'])->default('issued');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendants');
+        Schema::dropIfExists('issue_vouchers');
     }
 };

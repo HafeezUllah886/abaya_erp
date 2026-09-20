@@ -1,4 +1,4 @@
-﻿@extends('layout.app')
+@extends('layout.app')
 @section('content')
     <div class="container invoice-container">
         <div class="row">
@@ -57,7 +57,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 60px;">No</th>
-                                        <th scope="col" style="width: 300px;">Product</th>
+                                        <th scope="col" style="width: 300px;">Raw Material</th>
                                         <th scope="col" class="text-end" style="width: 150px;">Price</th>
                                         <th scope="col" class="text-end" style="width: 150px;">Quantity</th>
                                         <th scope="col" style="width: 100px;">Unit</th>
@@ -68,10 +68,10 @@
                                     @foreach ($purchase->details as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td class="f-w-600 text-dark">{{ $item->product->name }}</td>
+                                            <td class="f-w-600 text-dark">{{ $item->rawMaterial->name }}</td>
                                             <td class="text-end">{{ number_format($item->price, 2) }}</td>
                                             <td class="text-end">{{ number_format($item->qty, 2) }}</td>
-                                            <td><span class="badge bg-light text-dark">{{ $item->product->unit }}</span>
+                                            <td><span class="badge bg-light text-dark">{{ $item->rawMaterial->unit }}</span>
                                             </td>
                                             <td class="text-end text-dark">{{ number_format($item->amount, 2) }}</td>
                                         </tr>

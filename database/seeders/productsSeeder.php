@@ -12,11 +12,16 @@ class productsSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
-            ['name' => 'Petrol', 'price' => 375, 'unit' => 'Liter'],
-            ['name' => 'Diesel', 'price' => 385, 'unit' => 'Liter'],
-            ['name' => '20w50 Engine Oil', 'price' => 300, 'unit' => 'Piece'],
-        ];
-        products::insert($data);
+        \App\Models\RawMaterial::create([
+            'name' => 'Black Nida Fabric',
+            'unit' => 'meter',
+            'cost_price' => 500,
+        ]);
+
+        \App\Models\products::create([
+            'name' => 'Classic Black Abaya',
+            'sku' => 'AB-BLK-01',
+            'retail_price' => 5000,
+        ]);
     }
 }

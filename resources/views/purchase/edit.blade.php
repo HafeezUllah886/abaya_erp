@@ -1,11 +1,11 @@
-﻿@extends('layout.app')
+@extends('layout.app')
 @section('content')
 <script>
     var existingProducts = [];
 
     @foreach ($purchase->details as $product)
         @php
-            $product_id = $product->product_id;
+            $product_id = $product->raw_material_id;
         @endphp
         existingProducts.push({{$product_id}});
     @endforeach
@@ -23,7 +23,7 @@
                         <div class="row g-1">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="product">Product</label>
+                                    <label for="product">Raw Material</label>
                                     <select name="product" class="w-100" id="product">
                                         <option value=""></option>
                                         @foreach ($products as $product)
@@ -36,7 +36,7 @@
                             <div class="col-12">
                                 <table class="table table-striped table-hover">
                                     <thead>
-                                        <th width="30%">Item</th>
+                                        <th width="30%">Raw Material</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Qty</th>
                                         <th class="text-end">Amount</th>
@@ -45,11 +45,11 @@
                                     <tbody id="products_list">
                                         @foreach ($purchase->details as $item)
                                         @php
-                                            $product_id = $item->product_id;
+                                            $product_id = $item->raw_material_id;
                                             
                                         @endphp
                                            <tr id="row_{{ $product_id }}">
-                                            <td class="p-1">{{$item->product->name}}</td>
+                                            <td class="p-1">{{$item->rawMaterial->name}}</td>
                                             <td class="p-0"><input type="number" name="price[]" step="any" value="{{$item->price}}" min="0" class="form-control form-control-sm text-center p-1" id="price_{{ $product_id }}"></td>
                                             <td class="p-0"><input type="number" name="qty[]" oninput="updateChanges({{ $product_id }})" min="0" step="any" value="{{$item->qty}}" class="form-control form-control-sm text-center p-1" id="qty_{{ $product_id }}"></td>
                                             <td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{$item->amount}}" class="form-control form-control-sm text-center p-1" id="amount_{{ $product_id }}"></td>
@@ -137,7 +137,7 @@
     $(document).ready(function() {
         $('.select2').select2();
         $('#product').select2({
-        placeholder: "Select a Product",
+        placeholder: "Select a Raw Material",
         allowClear: true,
         width: '100%' 
     });
@@ -167,7 +167,7 @@
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="p-1">' + product.name + '</td>';
                     
-                        html += '<td class="p-0"><input type="number" name="price[]" step="any" value="'+product.price+'" min="0" class="form-control form-control-sm text-center p-1" id="price_' + id + '"></td>';
+                        html += '<td class="p-0"><input type="number" name="price[]" step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control form-control-sm text-center p-1" id="price_' + id + '"></td>';
                         html += '<td class="p-0"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="qty_' + id + '"></td>';
                         html += '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1" id="amount_' + id + '"></td>';
                         html += '<td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';

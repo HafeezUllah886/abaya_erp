@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('raw_materials', function (Blueprint $table) {
             $table->id();
-            $table->morphs('item');
-            $table->date('date');
-            $table->float('cr')->default(0);
-            $table->float('db')->default(0);
-            $table->text('notes')->nullable();
-            $table->bigInteger('refID');
+            $table->string('name');
+            $table->string('unit')->default('pcs');
+            $table->decimal('cost_price', 10, 2)->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('raw_materials');
     }
 };

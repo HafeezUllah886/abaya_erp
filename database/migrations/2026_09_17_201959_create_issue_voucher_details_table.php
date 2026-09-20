@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('demand_delivery_details', function (Blueprint $table) {
+        Schema::create('issue_voucher_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('delivery_id')->constrained('demand_deliveries', 'id')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products', 'id');
+            $table->foreignId('issue_voucher_id')->constrained('issue_vouchers')->cascadeOnDelete();
+            $table->foreignId('raw_material_id')->constrained('raw_materials');
             $table->float('qty');
-            $table->float('price');
-            $table->float('amount');
-            $table->bigInteger('refID');
+            $table->decimal('cost_at_issue', 10, 2);
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('demand_delivery_details');
+        Schema::dropIfExists('issue_voucher_details');
     }
 };

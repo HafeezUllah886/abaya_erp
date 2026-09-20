@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Demand extends Model
+class Order extends Model
 {
     protected $guarded = [];
 
@@ -15,11 +15,6 @@ class Demand extends Model
 
     public function details()
     {
-        return $this->hasMany(DemandDetail::class, 'demand_id');
-    }
-
-    public function deliveries()
-    {
-        return $this->hasMany(DemandDelivery::class, 'demand_id');
+        return $this->hasMany(OrderDetail::class);
     }
 }

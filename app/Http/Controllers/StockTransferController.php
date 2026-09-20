@@ -75,8 +75,8 @@ class StockTransferController extends Controller
                 );
                 $warehouseFrom = warehouses::find($request->fromID);
                 $warehouseTo = warehouses::find($request->toID);
-                createStock($id,0, $qty, $request->date, "Transfered to $warehouseTo->name", $ref, $request->fromID);
-                createStock($id,$qty, 0, $request->date, "Transfered from $warehouseFrom->name", $ref, $request->toID);
+                createStock($id, 'App\\Models\\products', 0, $qty, $request->date, "Transfered to $warehouseTo->name", $ref);
+                createStock($id, 'App\\Models\\products', $qty, 0, $request->date, "Transfered from $warehouseFrom->name", $ref);
             }
            DB::commit();
             return to_route('stockTransfer.index')->with('success', "Stock Transfer Created");

@@ -98,7 +98,7 @@ class SaleController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 0, $qty, $request->date, "Sold in $sale->id", $ref);
+                    createStock($id, 'App\\Models\\products', 0, $qty, $request->date, "Sold in $sale->id", $ref);
                 }
             }
             $sale->update(
@@ -211,7 +211,7 @@ class SaleController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 0, $qty, $request->date, "Sold in $sale->id", $ref);
+                    createStock($id, 'App\\Models\\products', 0, $qty, $request->date, "Sold in $sale->id", $ref);
                 }
             }
 

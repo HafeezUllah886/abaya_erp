@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\ConfirmPassword;
 use App\Models\accounts;
-use App\Models\products;
+use App\Models\RawMaterial;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\stock;
@@ -48,7 +48,7 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $products = products::orderby('name', 'asc')->get();
+        $products = RawMaterial::orderby('name', 'asc')->get();
         $suppliers = accounts::active()->supplier()->get();
         $accounts = accounts::active()->business()->get();
 
@@ -89,7 +89,7 @@ class PurchaseController extends Controller
                     purchase_details::create(
                         [
                             'purchase_id' => $purchase->id,
-                            'product_id' => $id,
+                            'raw_material_id' => $id,
                             'price' => $price,
                             'qty' => $qty,
                             'amount' => $amount,
@@ -97,7 +97,7 @@ class PurchaseController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
+                    createStock($id, 'App\Models\RawMaterial', $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
                 }
             }
             $purchase->update(
@@ -134,7 +134,7 @@ class PurchaseController extends Controller
 
     public function edit(purchase $purchase)
     {
-        $products = products::orderby('name', 'asc')->get();
+        $products = RawMaterial::orderby('name', 'asc')->get();
         $suppliers = accounts::active()->supplier()->get();
         $accounts = accounts::active()->business()->get();
 
@@ -180,7 +180,7 @@ class PurchaseController extends Controller
                     purchase_details::create(
                         [
                             'purchase_id' => $purchase->id,
-                            'product_id' => $id,
+                            'raw_material_id' => $id,
                             'price' => $price,
                             'qty' => $qty,
                             'amount' => $amount,
@@ -188,7 +188,7 @@ class PurchaseController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
+                    createStock($id, 'App\Models\RawMaterial', $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
                 }
             }
 
@@ -246,7 +246,7 @@ class PurchaseController extends Controller
 
     public function getSignleProduct($id)
     {
-        $product = products::find($id);
+        $product = RawMaterial::find($id);
 
         return $product;
     }

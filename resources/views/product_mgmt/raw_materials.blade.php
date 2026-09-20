@@ -6,9 +6,9 @@
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
 
-                    <h5>Finished Abayas (Products)</h5>
+                    <h5>Raw Materials</h5>
 
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new">Add Product</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new">Add Raw Material</button>
                 </div>
                 <div class="card-body p-0">
                     <div class="app-datatable-default overflow-auto app-scroll">
@@ -16,9 +16,8 @@
                             <thead>
                                 <tr>
                                     <th width="10px">#</th>
-                                    <th class="text-start">Product Name</th>
-                                    <th>SKU</th>
-                                    <th>Retail Price</th>
+                                    <th class="text-start">Material Name</th>
+                                    <th>Unit</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -28,8 +27,7 @@
                                     <tr>
                                         <td class="text-dark">{{ $key + 1 }}</td>
                                         <td class="text-start">{{ $item->name }}</td>
-                                        <td>{{ $item->sku }}</td>
-                                        <td>{{ number_format($item->retail_price, 2) }}</td>
+                                        <td>{{ $item->unit }}</td>
                                         <td>
                                             @if ($item->is_active == 1)
                                                 <span class="badge bg-success">Active</span>
@@ -46,11 +44,11 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="myModalLabel">Edit Product</h5>
+                                                        <h5 class="modal-title" id="myModalLabel">Edit Raw Material</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"> </button>
                                                     </div>
-                                                    <form action="{{ route('products.update', $item->id) }}" method="post">
+                                                    <form action="{{ route('raw_materials.update', $item->id) }}" method="post">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
@@ -63,17 +61,15 @@
                                                             </div>
 
                                                             <div class="form-group mt-2">
-                                                                <label for="sku">SKU</label>
-                                                                <input type="text" name="sku" required
-                                                                    value="{{ $item->sku }}" id="sku"
-                                                                    class="form-control">
-                                                            </div>
-
-                                                            <div class="form-group mt-2">
-                                                                <label for="retail_price">Retail Price</label>
-                                                                <input type="number" step="any" name="retail_price" required
-                                                                    value="{{ $item->retail_price }}" min="0"
-                                                                    id="retail_price" class="form-control">
+                                                                <label for="unit">Unit</label>
+                                                                <select name="unit" id="unit" class="form-control">
+                                                                    <option value="Meter" {{ $item->unit == 'Meter' ? 'selected' : '' }}>Meter</option>
+                                                                    <option value="Yard" {{ $item->unit == 'Yard' ? 'selected' : '' }}>Yard</option>
+                                                                    <option value="Pcs" {{ $item->unit == 'Pcs' ? 'selected' : '' }}>Pcs</option>
+                                                                    <option value="Rolls" {{ $item->unit == 'Rolls' ? 'selected' : '' }}>Rolls</option>
+                                                                    <option value="Ltr" {{ $item->unit == 'Ltr' ? 'selected' : '' }}>Ltr</option>
+                                                                    <option value="Nos" {{ $item->unit == 'Nos' ? 'selected' : '' }}>Nos</option>
+                                                                </select>
                                                             </div>
 
                                                             <div class="form-group mt-2">
@@ -122,10 +118,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Create New Product</h5>
+                    <h5 class="modal-title" id="myModalLabel">Create New Raw Material</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('products.store') }}" method="post">
+                <form action="{{ route('raw_materials.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         
@@ -135,14 +131,15 @@
                         </div>
 
                         <div class="form-group mt-2">
-                            <label for="sku">SKU</label>
-                            <input type="text" name="sku" required id="sku" class="form-control">
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label for="retail_price">Retail Price</label>
-                            <input type="number" step="any" name="retail_price" required value="" min="0"
-                                id="retail_price" class="form-control">
+                            <label for="unit">Unit</label>
+                            <select name="unit" id="unit" class="form-control">
+                                <option value="Meter">Meter</option>
+                                <option value="Yard">Yard</option>
+                                <option value="Pcs">Pcs</option>
+                                <option value="Rolls">Rolls</option>
+                                <option value="Ltr">Ltr</option>
+                                <option value="Nos">Nos</option>
+                            </select>
                         </div>
 
                     </div>

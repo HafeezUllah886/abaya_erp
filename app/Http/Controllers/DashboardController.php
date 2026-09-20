@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
         $currentMonthCogs = 0;
         foreach ($currentMonthSalesDetails as $detail) {
-            $currentMonthCogs += $detail->qty * avgPurchasePrice('all', 'all', $detail->product_id);
+            $currentMonthCogs += $detail->qty * avgManufacturingCost('all', 'all', $detail->product_id);
         }
 
         $currentMonthProfit = $currentMonthSales - $currentMonthCogs - $currentMonthExpenses;
@@ -72,7 +72,7 @@ class DashboardController extends Controller
                 ->get();
             $mCogs = 0;
             foreach ($mSalesDetails as $detail) {
-                $mCogs += $detail->qty * avgPurchasePrice('all', 'all', $detail->product_id);
+                $mCogs += $detail->qty * avgManufacturingCost('all', 'all', $detail->product_id);
             }
 
             // Monthly Net Profit

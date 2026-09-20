@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('accounts', 'id');
-            $table->foreignId('attendant_id')->constrained('attendants', 'id');
+            $table->foreignId('customer_id')->nullable()->constrained('accounts');
             $table->date('date');
             $table->float('total')->default(0);
             $table->text('notes')->nullable();

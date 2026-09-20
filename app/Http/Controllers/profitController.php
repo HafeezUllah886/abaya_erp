@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DemandDeliveryDetail;
 use App\Models\expenses;
 use App\Models\products;
 use App\Models\sale_details;
@@ -22,18 +21,15 @@ class profitController extends Controller
         $products = products::all();
         $data = [];
         foreach ($products as $product) {
-            $purchaseRate = avgPurchasePrice($from, $to, $product->id);
+            $purchaseRate = avgManufacturingCost($from, $to, $product->id);
             $saleRate = avgSalePrice($from, $to, $product->id);
             $sold = sale_details::where('product_id', $product->id)->whereBetween('date', [$from, $to])->sum('qty');
-            $demand_sold = DemandDeliveryDetail::where('product_id', $product->id)->whereHas('delivery', function ($q) use ($from, $to) {
-                $q->whereBetween('date', [$from, $to]);
-            })->sum('qty');
-            $sold += $demand_sold;
+
 
             $ppu = $saleRate - $purchaseRate;
             $profit = $ppu * $sold;
-            $stock = getStock($product->id);
-            $stockValue = productStockValue($product->id);
+            $stock = getStock($product->id, 'App\Models\products');
+            $stockValue = itemStockValue($product->id, 'App\Models\products');
 
             $data[] = ['name' => $product->name, 'purchaseRate' => $purchaseRate, 'saleRate' => $saleRate, 'sold' => $sold, 'ppu' => $ppu, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue];
         }

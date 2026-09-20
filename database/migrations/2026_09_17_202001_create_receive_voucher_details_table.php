@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_adjustments', function (Blueprint $table) {
+        Schema::create('receive_voucher_details', function (Blueprint $table) {
             $table->id();
-            $table->morphs('item');
-            $table->foreignId('user_id')->constrained('users', 'id');
-            $table->date('date');
-            $table->enum('type', ['Credit', 'Debit']);
+            $table->foreignId('receive_voucher_id')->constrained('receive_vouchers')->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained('products'); // Abaya finished goods
             $table->float('qty');
-            $table->text('notes')->nullable();
-            $table->bigInteger('refID');
+            $table->decimal('stitching_cost_per_unit', 10, 2);
+            $table->decimal('total_calculated_cost', 10, 2);
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_adjustments');
+        Schema::dropIfExists('receive_voucher_details');
     }
 };

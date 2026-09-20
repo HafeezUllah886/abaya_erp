@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\products;
 use App\Models\stock;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
@@ -14,7 +15,6 @@ class ProductsController extends Controller
     public function index()
     {
         $items = products::all();
-
         return view('product_mgmt.products', compact('items'));
     }
 
@@ -33,10 +33,10 @@ class ProductsController extends Controller
     {
         $request->validate(
             [
-                'name' => 'unique:products,name',
-            ],
-            [
-                'name.unique' => 'Product already Existing',
+                'name' => 'required',
+                'sku' => 'required|unique:products,sku',
+                'category_id' => 'required',
+                'retail_price' => 'required|numeric',
             ]
         );
 
@@ -88,10 +88,10 @@ class ProductsController extends Controller
     {
         $request->validate(
             [
-                'name' => 'unique:products,name,'.$id,
-            ],
-            [
-                'name.unique' => 'Product already Existing',
+                'name' => 'required',
+                'sku' => 'required|unique:products,sku,'.$id,
+                'category_id' => 'required',
+                'retail_price' => 'required|numeric',
             ]
         );
 

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\DemandDeliveryDetail;
 use App\Models\products;
 use App\Models\purchase_details;
 use App\Models\ref;
@@ -36,11 +35,12 @@ function lastDayOfMonth()
     return $endOfMonth->format('Y-m-d');
 }
 
-function createStock($id, $cr, $db, $date, $notes, $ref)
+function createStock($id, $type, $cr, $db, $date, $notes, $ref)
 {
     stock::create(
         [
-            'product_id' => $id,
+            'item_id' => $id,
+            'item_type' => $type,
             'cr' => $cr,
             'db' => $db,
             'date' => $date,
@@ -49,9 +49,9 @@ function createStock($id, $cr, $db, $date, $notes, $ref)
         ]
     );
 }
-function getStock($id)
+function getStock($id, $type)
 {
-    $stocks = stock::where('product_id', $id)->get();
+    $stocks = stock::where('item_id', $id)->where('item_type', $type)->get();
     $balance = 0;
     foreach ($stocks as $stock) {
         $balance += $stock->cr;
@@ -61,9 +61,9 @@ function getStock($id)
     return $balance;
 }
 
-function getStockOnTime($id, $time)
+function getStockOnTime($id, $type, $time)
 {
-    $stocks = stock::where('product_id', $id)->whereDate('created_at', '<=', $time)->get();
+    $stocks = stock::where('item_id', $id)->where('item_type', $type)->whereDate('created_at', '<=', $time)->get();
     $balance = 0;
     foreach ($stocks as $stock) {
         $balance += $stock->cr;
@@ -82,21 +82,8 @@ function avgSalePrice($from, $to, $id)
     $sales_amount = $sales->sum('amount');
     $sales_qty = $sales->sum('qty');
 
-    $demandDeliveries = DemandDeliveryDetail::where('product_id', $id);
-    if ($from != 'all' && $to != 'all') {
-        $demandDeliveries->whereHas('delivery', function ($q) use ($from, $to) {
-            $q->whereBetween('date', [$from, $to]);
-        });
-    }
-
-    $demand_amount = $demandDeliveries->sum('amount');
-    $demand_qty = $demandDeliveries->sum('qty');
-
-    $total_amount = $sales_amount + $demand_amount;
-    $total_qty = $sales_qty + $demand_qty;
-
-    if ($total_qty > 0) {
-        $sale_price = $total_amount / $total_qty;
+    if ($sales_qty > 0) {
+        $sale_price = $sales_amount / $sales_qty;
     } else {
         $sale_price = 0;
     }
@@ -106,7 +93,7 @@ function avgSalePrice($from, $to, $id)
 
 function avgPurchasePrice($from, $to, $id)
 {
-    $purchases = purchase_details::where('product_id', $id);
+    $purchases = purchase_details::where('raw_material_id', $id);
     if ($from != 'all' && $to != 'all') {
         $purchases->whereBetween('date', [$from, $to]);
     }
@@ -124,32 +111,49 @@ function avgPurchasePrice($from, $to, $id)
 
 function stockValue()
 {
-    $products = products::all();
+    $rawMaterials = \App\Models\RawMaterial::all();
 
     $value = 0;
-    foreach ($products as $product) {
-        $value += productStockValue($product->id);
+    foreach ($rawMaterials as $item) {
+        $value += itemStockValue($item->id, 'App\Models\RawMaterial');
+    }
+
+    $products = \App\Models\products::all();
+    foreach ($products as $item) {
+        $value += itemStockValue($item->id, 'App\Models\products');
     }
 
     return $value;
 }
 
-function productStockValue($id)
+function itemStockValue($id, $type)
 {
-    $stock = getStock($id);
-    $price = avgPurchasePrice('all', 'all', $id);
+    $stock = getStock($id, $type);
+    
+    $price = 0;
+    if ($type === 'App\Models\RawMaterial') {
+        $price = avgPurchasePrice('all', 'all', $id);
+    } elseif ($type === 'App\Models\products') {
+        $price = avgManufacturingCost('all', 'all', $id);
+    }
 
     return $price * $stock;
 }
 
+function avgManufacturingCost($from, $to, $id)
+{
+    // Simplified: Return 0 until strict costing in ReceiveVouchers is built.
+    return 0;
+}
+
 function projectName()
 {
-    return 'JAMIL LUBRICANTS & OIL';
+    return 'ABAYA ERP';
 }
 
 function projectNameShort()
 {
-    return 'JLO';
+    return 'ABAYA';
 }
 
 function addressLineOne()

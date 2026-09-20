@@ -26,6 +26,16 @@ class accounts extends Model
         return $query->where('type', 'Supplier');
     }
 
+    public function scopeTailor($query)
+    {
+        return $query->where('type', 'Tailor');
+    }
+
+    public function scopeInvestor($query)
+    {
+        return $query->where('type', 'Investor');
+    }
+
     public function transactions()
     {
         return $this->hasMany(transactions::class, 'accountID');
