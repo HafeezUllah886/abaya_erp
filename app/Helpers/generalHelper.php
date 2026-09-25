@@ -51,6 +51,11 @@ function createStock($id, $type, $cr, $db, $date, $notes, $ref)
 }
 function getStock($id, $type)
 {
+    if ($type == 'finished') {
+        $type = 'App\Models\products';
+    } else {
+        $type = 'App\Models\products';
+    }
     $stocks = stock::where('item_id', $id)->where('item_type', $type)->get();
     $balance = 0;
     foreach ($stocks as $stock) {
@@ -93,7 +98,7 @@ function avgSalePrice($from, $to, $id)
 
 function avgPurchasePrice($from, $to, $id)
 {
-    $purchases = purchase_details::where('raw_material_id', $id);
+    $purchases = purchase_details::where('product_id', $id);
     if ($from != 'all' && $to != 'all') {
         $purchases->whereBetween('date', [$from, $to]);
     }
@@ -111,16 +116,16 @@ function avgPurchasePrice($from, $to, $id)
 
 function stockValue()
 {
-    $rawMaterials = \App\Models\RawMaterial::all();
+    $rawMaterials = products::RawMaterial()->get();
 
     $value = 0;
     foreach ($rawMaterials as $item) {
-        $value += itemStockValue($item->id, 'App\Models\RawMaterial');
+        $value += itemStockValue($item->id, 'Raw Material');
     }
 
-    $products = \App\Models\products::all();
+    $products = products::Finished()->get();
     foreach ($products as $item) {
-        $value += itemStockValue($item->id, 'App\Models\products');
+        $value += itemStockValue($item->id, 'Finished Abaya');
     }
 
     return $value;
@@ -128,12 +133,12 @@ function stockValue()
 
 function itemStockValue($id, $type)
 {
-    $stock = getStock($id, $type);
-    
+    $stock = getStock($id, 'App\Models\products');
+
     $price = 0;
-    if ($type === 'App\Models\RawMaterial') {
+    if ($type === 'Raw Material') {
         $price = avgPurchasePrice('all', 'all', $id);
-    } elseif ($type === 'App\Models\products') {
+    } elseif ($type === 'Finished Abaya') {
         $price = avgManufacturingCost('all', 'all', $id);
     }
 

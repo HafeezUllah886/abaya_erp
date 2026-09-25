@@ -11,11 +11,19 @@ class StockController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = products::all();
+        $type = $request->type ?? 'Finished Abaya Stock';
 
-        return view('stock.index', compact('products', 'warehouses'));
+        if ($type == 'Finished Abaya Stock') {
+            $products = products::active()->finished()->get();
+            $type = 'Finished Abaya';
+        } else {
+            $products = products::active()->rawMaterial()->get();
+            $type = 'Raw Material';
+        }
+
+        return view('product_mgmt.stock', compact('products', 'type'));
     }
 
     /**
@@ -37,7 +45,25 @@ class StockController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $warehouse, $from, $to) {}
+    public function show(Request $request, $id)
+    {
+        $from = $request->from;
+        $to = $request->to;
+        $type = $request->type ?? 'Finished Abaya';
+
+        $product = products::find($id);
+
+        $pre_stocks = stock::where('item_id', $id)->where('item_type', 'App\Models\products')->where('date', '<', $from)->get();
+        $pre_balance = 0;
+        foreach ($pre_stocks as $item) {
+            $pre_balance += $item->cr;
+            $pre_balance -= $item->db;
+        }
+
+        $stocks = stock::where('item_id', $id)->where('item_type', 'App\Models\products')->whereBetween('date', [$from, $to])->get();
+
+        return view('product_mgmt.stock_details', compact('product', 'stocks', 'pre_balance', 'from', 'to'));
+    }
 
     /**
      * Show the form for editing the specified resource.

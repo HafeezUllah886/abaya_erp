@@ -11,8 +11,8 @@ class stock extends Model
 
     protected $guarded = [];
 
-    public function item()
+    public function product()
     {
-        return $this->morphTo();
+        return $this->belongsTo(products::class);
     }
 }

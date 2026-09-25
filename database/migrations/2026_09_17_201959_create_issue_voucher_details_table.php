@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('issue_voucher_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('issue_voucher_id')->constrained('issue_vouchers')->cascadeOnDelete();
-            $table->foreignId('raw_material_id')->constrained('raw_materials');
+            $table->foreignId('product_id')->constrained('products', 'id');
             $table->float('qty');
             $table->decimal('cost_at_issue', 10, 2);
             $table->timestamps();

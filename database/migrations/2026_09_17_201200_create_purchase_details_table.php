@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('purchase_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('purchase_id')->constrained('purchases', 'id');
-            $table->foreignId('raw_material_id')->constrained('raw_materials', 'id');
+            $table->foreignId('product_id')->constrained('products', 'id');
             $table->float('price', 10);
             $table->float('qty');
             $table->float('amount');

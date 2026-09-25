@@ -23,7 +23,12 @@
              ) {
                  $activeMenu = 'financePage';
              } elseif (
-                 \Illuminate\Support\Str::startsWith($routeName, ['products.', 'raw_materials.', 'product_stock.', 'stockDetails'])
+                 \Illuminate\Support\Str::startsWith($routeName, [
+                     'products.',
+                     'raw_materials.',
+                     'stock.',
+                     'stockDetails',
+                 ])
              ) {
                  $activeMenu = 'productPage';
              } elseif (\Illuminate\Support\Str::startsWith($routeName, ['sale', 'shift', 'orders', 'fulfillments'])) {
@@ -152,14 +157,17 @@
                  </ul>
 
                  <!-- Manufacturing -->
-                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}" id="manufacturingPage"
+                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}"
+                     id="manufacturingPage"
                      style="display: {{ $activeMenu == 'manufacturingPage' ? 'block' : 'none' }};">
                      <li class="no-sub {{ $routeName == 'issue_vouchers.create' ? 'active' : '' }}"><a
                              href="{{ route('issue_vouchers.create') }}"
-                             class="{{ $routeName == 'issue_vouchers.create' ? 'active' : '' }}">Issue to Tailor</a></li>
+                             class="{{ $routeName == 'issue_vouchers.create' ? 'active' : '' }}">Issue to Tailor</a>
+                     </li>
                      <li class="no-sub {{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}"><a
                              href="{{ route('receive_vouchers.create') }}"
-                             class="{{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}">Receive from Tailor</a></li>
+                             class="{{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}">Receive from
+                             Tailor</a></li>
                  </ul>
 
                  <!-- Finance -->
@@ -205,14 +213,16 @@
                  <ul class="main-menu {{ $activeMenu == 'productPage' ? 'active' : '' }}" id="productPage"
                      style="display: {{ $activeMenu == 'productPage' ? 'block' : 'none' }};">
                      <li class="no-sub {{ $routeName == 'products.index' ? 'active' : '' }}"><a
-                             href="{{ route('products.index') }}"
-                             class="{{ $routeName == 'products.index' ? 'active' : '' }}">Finished Abayas</a></li>
-                     <li class="no-sub {{ $routeName == 'raw_materials.index' ? 'active' : '' }}"><a
-                             href="{{ route('raw_materials.index') }}"
-                             class="{{ $routeName == 'raw_materials.index' ? 'active' : '' }}">Raw Materials</a></li>
-                     <li class="no-sub {{ $routeName == 'product_stock' ? 'active' : '' }}"><a
-                             href="{{ route('product_stock') }}"
-                             class="{{ $routeName == 'product_stock' ? 'active' : '' }}">Stocks</a></li>
+                             href="{{ route('products.index', ['type' => 'Finished Abaya']) }}"
+                             class="{{ request('type') == 'Finished Abaya' ? 'active' : '' }}">Finished Abayas</a>
+                     </li>
+
+
+
+                     <li class="no-sub {{ $routeName == 'products.index' ? 'active' : '' }}"><a
+                             href="{{ route('products.index', ['type' => 'Raw Material']) }}"
+                             class="{{ request('type') == 'Raw Material' ? 'active' : '' }}">Raw Materials</a></li>
+
                      <li class="no-sub {{ $routeName == 'stock-adjustments.index' ? 'active' : '' }}"><a
                              href="{{ route('stock-adjustments.index') }}"
                              class="{{ $routeName == 'stock-adjustments.index' ? 'active' : '' }}">Stock

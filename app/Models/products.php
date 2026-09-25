@@ -15,4 +15,14 @@ class products extends Model
     {
         return $this->where('is_active', true);
     }
+
+    public function scopeFinished()
+    {
+        return $this->where('type', 'Finished Abaya');
+    }
+
+    public function scopeRawMaterial()
+    {
+        return $this->where('type', 'Raw Material');
+    }
 }

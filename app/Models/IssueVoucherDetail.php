@@ -8,9 +8,9 @@ class IssueVoucherDetail extends Model
 {
     protected $guarded = [];
 
-    public function rawMaterial()
+    public function product()
     {
-        return $this->belongsTo(RawMaterial::class, 'raw_material_id');
+        return $this->belongsTo(products::class, 'product_id');
     }
     
     public function issueVoucher()

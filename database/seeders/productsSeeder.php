@@ -12,16 +12,18 @@ class productsSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\RawMaterial::create([
+        products::create([
             'name' => 'Black Nida Fabric',
             'unit' => 'meter',
-            'cost_price' => 500,
+            'price' => 500,
+            'type' => 'Raw Material',
         ]);
 
-        \App\Models\products::create([
+        products::create([
             'name' => 'Classic Black Abaya',
             'sku' => 'AB-BLK-01',
-            'retail_price' => 5000,
+            'price' => 5000,
+            'type' => 'Finished Abaya',
         ]);
     }
 }

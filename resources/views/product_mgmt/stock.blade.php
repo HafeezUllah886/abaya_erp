@@ -1,11 +1,11 @@
-﻿@extends('layout.app')
+@extends('layout.app')
 @section('content')
     <div class="row">
         <!-- Default Datatable start -->
         <div class="col-12">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h5>Stocks</h5>
+                    <h5>{{ Str::title(str_replace('_', ' ', $type)) }} Stocks</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="app-datatable-default overflow-auto app-scroll">
@@ -14,7 +14,12 @@
                                 <tr>
                                     <th width="10px">#</th>
                                     <th class="text-start">Product</th>
-                                    <th>Unit</th>
+                                    @if ($type == 'finished')
+                                        <th>SKU</th>
+                                    @else
+                                        <th>Unit</th>
+                                    @endif
+
                                     <th>Stock</th>
                                     <th>Stock Value</th>
                                     <th>Action</th>
@@ -25,9 +30,13 @@
                                     <tr>
                                         <td class="text-dark">{{ $key + 1 }}</td>
                                         <td class="text-start">{{ $product->name }}</td>
-                                        <td>{{ $product->unit }}</td>
-                                        <td>{{ number_format(getStock($product->id), 2) }}</td>
-                                        <td>{{ number_format(productStockValue($product->id), 2) }}</td>
+                                        @if ($type == 'finished')
+                                            <td>{{ $product->sku }}</td>
+                                        @else
+                                            <td>{{ $product->unit }}</td>
+                                        @endif
+                                        <td>{{ number_format(getStock($product->id, $type), 2) }}</td>
+                                        <td>{{ number_format(itemStockValue($product->id, $type), 2) }}</td>
 
                                         <td>
                                             <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
@@ -38,15 +47,15 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="myModalLabel">View Product Stock
+                                                        <h5 class="modal-title" id="myModalLabel">View Stock Details
                                                         </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"> </button>
                                                     </div>
-                                                    <form action="{{ route('products.show', $product->id) }}"
-                                                        method="get">
+                                                    <form action="{{ route('stock.show', $product->id) }}" method="get">
                                                         @csrf
                                                         <input type="hidden" name="id" value="{{ $product->id }}">
+                                                        <input type="hidden" name="type" value="{{ $type }}">
                                                         <div class="modal-body">
                                                             <div class="row">
                                                                 <div class="col-md-6">
@@ -88,52 +97,8 @@
             </div>
         </div>
         <!-- Default Datatable end -->
-
-
-
     </div>
     <!-- Default Modals -->
-
-    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-        style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Create New Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-                </div>
-                <form action="{{ route('products.store') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group mt-2">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" required id="name" class="form-control">
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label for="unit">Unit</label>
-                            <select name="unit" id="unit" class="form-control">
-                                <option value="Ltr">Ltr</option>
-                                <option value="Nos">Nos</option>
-
-                            </select>
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label for="price"> Price</label>
-                            <input type="number" step="any" name="price" required value="" min="0"
-                                id="price" class="form-control">
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 @endsection
 @section('page-css')
     <!-- data table css -->
