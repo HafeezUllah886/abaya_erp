@@ -168,6 +168,14 @@
                              href="{{ route('receive_vouchers.create') }}"
                              class="{{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}">Receive from
                              Tailor</a></li>
+                     <li class="no-sub {{ $routeName == 'issue_vouchers.index' ? 'active' : '' }}"><a
+                             href="{{ route('issue_vouchers.index') }}"
+                             class="{{ $routeName == 'issue_vouchers.index' ? 'active' : '' }}">Issue History</a>
+                     </li>
+                     <li class="no-sub {{ $routeName == 'receive_vouchers.index' ? 'active' : '' }}"><a
+                             href="{{ route('receive_vouchers.index') }}"
+                             class="{{ $routeName == 'receive_vouchers.index' ? 'active' : '' }}">Receive History</a>
+                     </li>
                  </ul>
 
                  <!-- Finance -->

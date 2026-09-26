@@ -18,13 +18,3 @@ class IssueVoucher extends Model
         return $this->belongsTo(accounts::class, 'tailor_id');
     }
 }
-
-class IssueVoucherDetail extends Model
-{
-    protected $guarded = [];
-
-    public function rawMaterial()
-    {
-        return $this->belongsTo(RawMaterial::class);
-    }
-}
