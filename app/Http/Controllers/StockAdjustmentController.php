@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\products;
-use App\Models\RawMaterial;
 use App\Models\stock;
 use App\Models\stockAdjustments;
 use Illuminate\Http\Request;
@@ -18,9 +17,8 @@ class StockAdjustmentController extends Controller
     {
         $adjustments = stockAdjustments::orderBy('id', 'desc')->get();
         $products = products::active()->get();
-        $rawMaterials = RawMaterial::active()->get();
 
-        return view('product_mgmt.adjustments', compact('adjustments', 'products', 'rawMaterials'));
+        return view('product_mgmt.adjustments', compact('adjustments', 'products'));
     }
 
     /**
@@ -41,8 +39,7 @@ class StockAdjustmentController extends Controller
             $ref = getRef();
             stockAdjustments::create(
                 [
-                    'item_id' => $request->item_id,
-                    'item_type' => $request->item_type,
+                    'product_id' => $request->product_id,
                     'user_id' => auth()->user()->id,
                     'type' => $request->type,
                     'qty' => $request->qty,
@@ -53,9 +50,9 @@ class StockAdjustmentController extends Controller
             );
 
             if ($request->type == 'Credit') {
-                createStock($request->item_id, $request->item_type, $request->qty, 0, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
+                createStock($request->product_id, 'App\Models\products', $request->qty, 0, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
             } else {
-                createStock($request->item_id, $request->item_type, 0, $request->qty, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
+                createStock($request->product_id, 'App\Models\products', 0, $request->qty, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
             }
 
             DB::commit();

@@ -72,7 +72,8 @@
                             <select name="from_id" id="from_id" onchange="getBalance(this.value);"
                                 class="form-control select2">
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
+                                    <option value="{{ $account->id }}">{{ $account->title }} ({{ $account->type }})
+                                    </option>
                                 @endforeach
 
                             </select>
@@ -83,7 +84,8 @@
                             <select name="to_id" id="to_id" onchange="getBalance1(this.value);"
                                 class="form-control select2">
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
+                                    <option value="{{ $account->id }}">{{ $account->title }} ({{ $account->type }})
+                                    </option>
                                 @endforeach
 
                             </select>
