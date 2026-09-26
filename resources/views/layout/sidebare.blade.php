@@ -196,6 +196,10 @@
                              href="{{ route('account.index', ['filter' => 'Supplier']) }}"
                              class="{{ request('filter') == 'Supplier' ? 'active' : '' }}">Supplier
                              Accounts</a></li>
+                     <li class="no-sub {{ request('filter') == 'Tailor' ? 'active' : '' }}"><a
+                             href="{{ route('account.index', ['filter' => 'Tailor']) }}"
+                             class="{{ request('filter') == 'Tailor' ? 'active' : '' }}">Tailor
+                             Accounts</a></li>
                      <li class="no-sub {{ $routeName == 'receivings.index' ? 'active' : '' }}"><a
                              href="{{ route('receivings.index') }}"
                              class="{{ $routeName == 'receivings.index' ? 'active' : '' }}">Receive

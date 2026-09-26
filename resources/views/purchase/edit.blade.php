@@ -5,7 +5,7 @@
 
     @foreach ($purchase->details as $product)
         @php
-            $product_id = $product->raw_material_id;
+            $product_id = $product->product_id;
         @endphp
         existingProducts.push({{$product_id}});
     @endforeach
@@ -45,11 +45,11 @@
                                     <tbody id="products_list">
                                         @foreach ($purchase->details as $item)
                                         @php
-                                            $product_id = $item->raw_material_id;
+                                            $product_id = $item->product_id;
                                             
                                         @endphp
                                            <tr id="row_{{ $product_id }}">
-                                            <td class="p-1">{{$item->rawMaterial->name}}</td>
+                                            <td class="p-1">{{$item->product->name}}</td>
                                             <td class="p-0"><input type="number" name="price[]" step="any" value="{{$item->price}}" min="0" class="form-control form-control-sm text-center p-1" id="price_{{ $product_id }}"></td>
                                             <td class="p-0"><input type="number" name="qty[]" oninput="updateChanges({{ $product_id }})" min="0" step="any" value="{{$item->qty}}" class="form-control form-control-sm text-center p-1" id="qty_{{ $product_id }}"></td>
                                             <td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{$item->amount}}" class="form-control form-control-sm text-center p-1" id="amount_{{ $product_id }}"></td>

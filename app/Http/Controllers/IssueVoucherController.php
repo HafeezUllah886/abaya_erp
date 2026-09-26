@@ -13,7 +13,7 @@ class IssueVoucherController extends Controller
     public function create()
     {
         $raw_materials = products::active()->rawMaterial()->get();
-        $tailors = accounts::where('type', 'Supplier')->get();
+        $tailors = accounts::tailor()->get();
 
         return view('manufacturing.issue.create', compact('raw_materials', 'tailors'));
     }
@@ -42,7 +42,7 @@ class IssueVoucherController extends Controller
                 'issue_voucher_id' => $voucher->id,
                 'product_id' => $product_id,
                 'qty' => $qty,
-                'cost_at_issue' => avgPurchasePrice('all', 'all', $product_id),
+                'cost_at_issue' => avgPurchasePrice('all', 'all', $product_id) * $qty,
             ]);
 
             createStock($product_id, 'App\Models\products', 0, $qty, $request->date, 'Issued to tailor voucher #'.$voucher->id, $ref);
@@ -61,7 +61,7 @@ class IssueVoucherController extends Controller
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
         $tailor = $request->tailor ?? 'all';
-        
+
         $vouchers = IssueVoucher::with('tailor')
             ->whereBetween('date', [$from, $to])
             ->when($tailor != 'all', function ($query) use ($tailor) {
@@ -95,7 +95,7 @@ class IssueVoucherController extends Controller
             'tailor_id' => $request->tailor_id,
             'date' => $request->date,
         ]);
-        
+
         return redirect()->route('issue_vouchers.index')->with('success', 'Voucher Updated Successfully');
     }
 
@@ -106,6 +106,7 @@ class IssueVoucherController extends Controller
             $detail->delete();
         }
         $issueVoucher->delete();
+
         return redirect()->back()->with('success', 'Issue Voucher Deleted Successfully');
     }
 }
