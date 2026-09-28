@@ -11,6 +11,7 @@
                 <p><strong>Tailor:</strong> {{ $voucher->tailor->title ?? 'N/A' }}</p>
                 <p><strong>Date:</strong> {{ date('d-m-Y', strtotime($voucher->date)) }}</p>
                 <p><strong>Status:</strong> {{ $voucher->status }}</p>
+                <p><strong>Production Amount:</strong> {{ number_format($voucher->stitching_charges_total, 2) }}</p>
                 
                 <table class="table">
                     <thead>

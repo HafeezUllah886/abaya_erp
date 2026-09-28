@@ -37,7 +37,7 @@
                                 <div class="form-group">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}"
-                                        class="form-control">
+                                        class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -51,7 +51,36 @@
                                     </select>
                                 </div>
                             </div>
-                          
+                            
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="amount">Production Amount</label>
+                                    <input type="number" name="amount" id="amount" class="form-control" min="0" step="any" required>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="payment_status">Payment Status</label>
+                                    <select name="payment_status" id="payment_status" class="form-control" required>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Paid">Paid</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-4" id="account_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="account_id">Paid From (Business Account)</label>
+                                    <select name="account_id" id="account_id" class="select2 w-100">
+                                        <option value=""></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary w-100">Create Receive Voucher</button>
                             </div>
@@ -72,10 +101,20 @@
     $(document).ready(function() {
         $('.select2').select2();
         $('#product').select2({
-        placeholder: "Select a Product",
-        allowClear: true,
-        width: '100%' 
-    });
+            placeholder: "Select a Product",
+            allowClear: true,
+            width: '100%' 
+        });
+
+        $('#payment_status').on('change', function() {
+            if($(this).val() == 'Paid') {
+                $('#account_div').show();
+                $('#account_id').attr('required', true);
+            } else {
+                $('#account_div').hide();
+                $('#account_id').attr('required', false);
+            }
+        });
     });
 
      $("#product").on('select2:select', function(e) {

@@ -14,8 +14,9 @@ class ReceiveVoucherController extends Controller
     {
         $products = products::all();
         $tailors = accounts::where('type', 'Supplier')->get();
+        $accounts = accounts::where('type', 'Business')->get();
 
-        return view('manufacturing.receive.create', compact('products', 'tailors'));
+        return view('manufacturing.receive.create', compact('products', 'tailors', 'accounts'));
     }
 
     public function store(Request $request)
@@ -23,17 +24,27 @@ class ReceiveVoucherController extends Controller
         $request->validate([
             'tailor_id' => 'required',
             'date' => 'required',
+            'amount' => 'required|numeric|min:0',
+            'payment_status' => 'required',
             'id' => 'required|array',
             'qty' => 'required|array',
         ]);
+
+        if($request->payment_status == 'Paid') {
+            $request->validate([
+                'account_id' => 'required'
+            ]);
+        }
+
+        $ref = getRef();
 
         $voucher = ReceiveVoucher::create([
             'tailor_id' => $request->tailor_id,
             'date' => $request->date,
             'status' => 'Received',
+            'refID' => $ref,
+            'stitching_charges_total' => $request->amount,
         ]);
-
-        $ref = getRef();
 
         foreach ($request->id as $key => $product_id) {
             $qty = $request->qty[$key];
@@ -42,10 +53,18 @@ class ReceiveVoucherController extends Controller
                 'receive_voucher_id' => $voucher->id,
                 'product_id' => $product_id,
                 'qty' => $qty,
-                'cost' => 0, // In full implementation, link to IssueVoucher and compute cost
+                'stitching_cost_per_unit' => 0, 
+                'total_calculated_cost' => 0,
             ]);
 
             createStock($product_id, 'App\Models\products', $qty, 0, $request->date, 'Received from tailor voucher #'.$voucher->id, $ref);
+        }
+
+        if($request->payment_status == 'Paid') {
+            createTransaction($request->account_id, $request->date, 0, $request->amount, "Payment for Receive Voucher #".$voucher->id, $ref);
+            createTransaction($request->tailor_id, $request->date, $request->amount, $request->amount, "Payment for Receive Voucher #".$voucher->id, $ref);
+        } else {
+            createTransaction($request->tailor_id, $request->date, 0, $request->amount, "Pending Amount for Receive Voucher #".$voucher->id, $ref);
         }
 
         return redirect()->back()->with('success', 'Receive Voucher Created Successfully');

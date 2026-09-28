@@ -17,4 +17,9 @@ class ReceiveVoucher extends Model
     {
         return $this->belongsTo(IssueVoucher::class);
     }
+
+    public function tailor()
+    {
+        return $this->belongsTo(accounts::class, 'tailor_id');
+    }
 }
