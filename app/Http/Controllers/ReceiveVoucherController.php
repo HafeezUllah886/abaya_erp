@@ -12,9 +12,9 @@ class ReceiveVoucherController extends Controller
 {
     public function create()
     {
-        $products = products::all();
-        $tailors = accounts::where('type', 'Supplier')->get();
-        $accounts = accounts::where('type', 'Business')->get();
+        $products = products::finished()->get();
+        $tailors = accounts::tailor()->get();
+        $accounts = accounts::business()->get();
 
         return view('manufacturing.receive.create', compact('products', 'tailors', 'accounts'));
     }
@@ -30,9 +30,9 @@ class ReceiveVoucherController extends Controller
             'qty' => 'required|array',
         ]);
 
-        if($request->payment_status == 'Paid') {
+        if ($request->payment_status == 'Paid') {
             $request->validate([
-                'account_id' => 'required'
+                'account_id' => 'required',
             ]);
         }
 
@@ -53,18 +53,18 @@ class ReceiveVoucherController extends Controller
                 'receive_voucher_id' => $voucher->id,
                 'product_id' => $product_id,
                 'qty' => $qty,
-                'stitching_cost_per_unit' => 0, 
+                'stitching_cost_per_unit' => 0,
                 'total_calculated_cost' => 0,
             ]);
 
             createStock($product_id, 'App\Models\products', $qty, 0, $request->date, 'Received from tailor voucher #'.$voucher->id, $ref);
         }
 
-        if($request->payment_status == 'Paid') {
-            createTransaction($request->account_id, $request->date, 0, $request->amount, "Payment for Receive Voucher #".$voucher->id, $ref);
-            createTransaction($request->tailor_id, $request->date, $request->amount, $request->amount, "Payment for Receive Voucher #".$voucher->id, $ref);
+        if ($request->payment_status == 'Paid') {
+            createTransaction($request->account_id, $request->date, 0, $request->amount, 'Payment for Receive Voucher #'.$voucher->id, $ref);
+            createTransaction($request->tailor_id, $request->date, $request->amount, $request->amount, 'Payment for Receive Voucher #'.$voucher->id, $ref);
         } else {
-            createTransaction($request->tailor_id, $request->date, 0, $request->amount, "Pending Amount for Receive Voucher #".$voucher->id, $ref);
+            createTransaction($request->tailor_id, $request->date, 0, $request->amount, 'Pending Amount for Receive Voucher #'.$voucher->id, $ref);
         }
 
         return redirect()->back()->with('success', 'Receive Voucher Created Successfully');
@@ -80,7 +80,7 @@ class ReceiveVoucherController extends Controller
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
         $tailor = $request->tailor ?? 'all';
-        
+
         $vouchers = ReceiveVoucher::with('tailor')
             ->whereBetween('date', [$from, $to])
             ->when($tailor != 'all', function ($query) use ($tailor) {
@@ -114,7 +114,7 @@ class ReceiveVoucherController extends Controller
             'tailor_id' => $request->tailor_id,
             'date' => $request->date,
         ]);
-        
+
         return redirect()->route('receive_vouchers.index')->with('success', 'Voucher Updated Successfully');
     }
 
@@ -124,6 +124,7 @@ class ReceiveVoucherController extends Controller
             $detail->delete();
         }
         $receiveVoucher->delete();
+
         return redirect()->back()->with('success', 'Receive Voucher Deleted Successfully');
     }
 }
