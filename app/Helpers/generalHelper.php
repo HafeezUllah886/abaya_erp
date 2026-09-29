@@ -153,12 +153,12 @@ function avgManufacturingCost($from, $to, $id)
 
 function projectName()
 {
-    return 'ABAYA ERP';
+    return 'BALORA ABAYA';
 }
 
 function projectNameShort()
 {
-    return 'ABAYA';
+    return 'BA';
 }
 
 function addressLineOne()
