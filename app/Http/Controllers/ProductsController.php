@@ -64,8 +64,7 @@ class ProductsController extends Controller
         $request->validate(
             [
                 'name' => 'required',
-                'sku' => 'required|unique:products,sku,'.$id,
-                'retail_price' => 'required|numeric',
+                'price' => 'required|numeric',
             ]
         );
 

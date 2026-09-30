@@ -160,21 +160,13 @@
                  <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}"
                      id="manufacturingPage"
                      style="display: {{ $activeMenu == 'manufacturingPage' ? 'block' : 'none' }};">
-                     <li class="no-sub {{ $routeName == 'issue_vouchers.create' ? 'active' : '' }}"><a
-                             href="{{ route('issue_vouchers.create') }}"
-                             class="{{ $routeName == 'issue_vouchers.create' ? 'active' : '' }}">Issue to Tailor</a>
+                     <li class="no-sub {{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}"><a
+                             href="{{ route('manufacturing_orders.create') }}"
+                             class="{{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}">Create Order</a>
                      </li>
-                     <li class="no-sub {{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}"><a
-                             href="{{ route('receive_vouchers.create') }}"
-                             class="{{ $routeName == 'receive_vouchers.create' ? 'active' : '' }}">Receive from
-                             Tailor</a></li>
-                     <li class="no-sub {{ $routeName == 'issue_vouchers.index' ? 'active' : '' }}"><a
-                             href="{{ route('issue_vouchers.index') }}"
-                             class="{{ $routeName == 'issue_vouchers.index' ? 'active' : '' }}">Issue History</a>
-                     </li>
-                     <li class="no-sub {{ $routeName == 'receive_vouchers.index' ? 'active' : '' }}"><a
-                             href="{{ route('receive_vouchers.index') }}"
-                             class="{{ $routeName == 'receive_vouchers.index' ? 'active' : '' }}">Receive History</a>
+                     <li class="no-sub {{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}"><a
+                             href="{{ route('manufacturing_orders.index') }}"
+                             class="{{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}">Order History</a>
                      </li>
                  </ul>
 

@@ -11,18 +11,18 @@ class products extends Model
 
     protected $guarded = [];
 
-    public function scopeActive()
+    public function scopeActive($query)
     {
-        return $this->where('is_active', true);
+        return $query->where('is_active', true);
     }
 
-    public function scopeFinished()
+    public function scopeFinished($query)
     {
-        return $this->where('type', 'Finished Abaya');
+        return $query->where('type', 'Finished Abaya');
     }
 
-    public function scopeRawMaterial()
+    public function scopeRawMaterial($query)
     {
-        return $this->where('type', 'Raw Material');
+        return $query->where('type', 'Raw Material');
     }
 }

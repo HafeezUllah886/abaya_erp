@@ -219,7 +219,7 @@
                 </div>
                 <form action="{{ route('products.store') }}" method="post">
                     @csrf
-                    <input type="hidden" value="{{ $type }}">
+                    <input type="hidden" name="type" value="{{ $type }}">
                     <div class="modal-body">
 
                         <div class="form-group mt-2">
