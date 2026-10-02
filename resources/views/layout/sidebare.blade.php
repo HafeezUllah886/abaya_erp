@@ -131,15 +131,9 @@
                  <!-- Sale -->
                  <ul class="main-menu {{ $activeMenu == 'salePage' ? 'active' : '' }}" id="salePage"
                      style="display: {{ $activeMenu == 'salePage' ? 'block' : 'none' }};">
-                     <li class="no-sub {{ $routeName == 'orders.create' ? 'active' : '' }}"><a
-                             href="{{ route('orders.create') }}"
-                             class="{{ $routeName == 'orders.create' ? 'active' : '' }}">Create Order</a></li>
-                     <li class="no-sub {{ $routeName == 'fulfillments.create' ? 'active' : '' }}"><a
-                             href="{{ route('fulfillments.create') }}"
-                             class="{{ $routeName == 'fulfillments.create' ? 'active' : '' }}">Fulfill Order</a></li>
                      <li class="no-sub {{ $routeName == 'sale.create' ? 'active' : '' }}"><a
                              href="{{ route('sale.create') }}"
-                             class="{{ $routeName == 'sale.create' ? 'active' : '' }}">Direct Sale</a></li>
+                             class="{{ $routeName == 'sale.create' ? 'active' : '' }}">Create Sale</a></li>
                      <li class="no-sub {{ $routeName == 'sale.index' ? 'active' : '' }}"><a
                              href="{{ route('sale.index') }}"
                              class="{{ $routeName == 'sale.index' ? 'active' : '' }}">Sales History</a></li>
@@ -157,16 +151,17 @@
                  </ul>
 
                  <!-- Manufacturing -->
-                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}"
-                     id="manufacturingPage"
+                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}" id="manufacturingPage"
                      style="display: {{ $activeMenu == 'manufacturingPage' ? 'block' : 'none' }};">
                      <li class="no-sub {{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}"><a
                              href="{{ route('manufacturing_orders.create') }}"
-                             class="{{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}">Create Order</a>
+                             class="{{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}">Create
+                             Order</a>
                      </li>
                      <li class="no-sub {{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}"><a
                              href="{{ route('manufacturing_orders.index') }}"
-                             class="{{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}">Order History</a>
+                             class="{{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}">Order
+                             History</a>
                      </li>
                  </ul>
 

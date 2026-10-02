@@ -49,7 +49,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $products = products::finished()->orderby('name', 'asc')->get();
+        $products = products::active()->finished()->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
 
