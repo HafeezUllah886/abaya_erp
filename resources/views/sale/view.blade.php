@@ -1,4 +1,4 @@
-﻿@extends('layout.app')
+@extends('layout.app')
 @section('content')
     <div class="container invoice-container">
         <div class="row">
@@ -21,8 +21,10 @@
                                     <h5 class="text-primary f-w-700 mb-2">SALE RECEIPT</h5>
                                     <p class="mb-1 text-dark-800">Receipt No. <strong
                                             class="text-dark">#{{ $sale->id }}</strong></p>
-                                    <p class="mb-0 text-dark-800">Date <strong
+                                    <p class="mb-1 text-dark-800">Date <strong
                                             class="text-dark">{{ date('d M Y', strtotime($sale->date)) }}</strong></p>
+                                    <p class="mb-0 text-dark-800">Delivery Date <strong
+                                            class="text-dark">{{ date('d M Y', strtotime($sale->delivery_date ?? $sale->date)) }}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -35,9 +37,9 @@
                             <div class="col-sm-6">
                                 <p class="text-muted f-s-11 text-uppercase f-w-600 mb-1 letter-spacing-1">Sale Type / Sold
                                     To</p>
-                                <h6 class="text-dark f-w-700 mb-1">{{ $sale->customer->title }}</h6>
+                                <h6 class="text-dark f-w-700 mb-1">{{ $sale->customer_name ?: $sale->customer->title }}</h6>
                                 <address class="mb-0 text-muted f-s-13">
-                                    {{ $sale->customer->address }} | {{ $sale->customer->contact }}
+                                    {{ $sale->customer->address }} | {{ $sale->contact ?: $sale->customer->contact }}
                                 </address>
                             </div>
                             <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
@@ -68,6 +70,7 @@
                                         <th scope="col" style="width: 300px;">Product</th>
                                         <th scope="col" class="text-end" style="width: 150px;">Price</th>
                                         <th scope="col" class="text-end" style="width: 150px;">Quantity</th>
+                                        <th scope="col" class="text-end" style="width: 150px;">Delivered</th>
                                         <th scope="col" style="width: 100px;">Unit</th>
                                         <th scope="col" class="text-end" style="width: 180px;">Total</th>
                                     </tr>
@@ -79,6 +82,7 @@
                                             <td class="f-w-600 text-dark">{{ $item->product->name }}</td>
                                             <td class="text-end">{{ number_format($item->price, 2) }}</td>
                                             <td class="text-end">{{ number_format($item->qty, 2) }}</td>
+                                            <td class="text-end">{{ number_format($item->delivered_qty, 2) }}</td>
                                             <td><span class="badge bg-light text-dark">{{ $item->product->unit }}</span>
                                             </td>
                                             <td class="text-end text-dark">{{ number_format($item->amount, 2) }}</td>
@@ -86,10 +90,20 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot>
+                                    <tr class="text-dark">
+                                        <td colspan="6" class="text-end border-top">Sub Total</td>
+                                        <td class="text-end text-dark border-top f-s-14">
+                                            {{ number_format($sale->details->sum('amount'), 2) }}</td>
+                                    </tr>
+                                    <tr class="text-dark">
+                                        <td colspan="6" class="text-end border-top">VAT ({{ $sale->vat ?? 0 }}%)</td>
+                                        <td class="text-end text-dark border-top f-s-14">
+                                            {{ number_format($sale->vat_amount ?? 0, 2) }}</td>
+                                    </tr>
                                     <tr class="table-light f-w-700 text-dark">
-                                        <td colspan="5" class="text-end border-top">Grand Total</td>
+                                        <td colspan="6" class="text-end border-top">Grand Total</td>
                                         <td class="text-end text-primary f-w-700 border-top f-s-16">
-                                            {{ number_format($sale->total, 2) }}</td>
+                                            {{ number_format($sale->total_bill, 2) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>

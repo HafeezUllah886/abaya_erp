@@ -125,12 +125,24 @@
         <div class="input-group">
             <span class="input-group-text"><i class="ti ti-user"></i></span>
             <label for="supplier" class="form-label" style="display: none;">Customer</label>
-            <select class="form-control" name="supplier" id="supplier">
+            <select class="form-control" name="customer" id="customer">
                 <option value="all">All Customers</option>
                 @foreach ($customers as $cust)
-                    <option value="{{ $cust->id }}" {{ $customer == $cust->id ? 'selected' : '' }}>
+                    <option value="{{ $cust->id }}" {{ (isset($customer) && $customer == $cust->id) ? 'selected' : '' }}>
                         {{ $cust->title }}</option>
                 @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="ti ti-truck"></i></span>
+            <label for="status" class="form-label" style="display: none;">Status</label>
+            <select class="form-control" name="status" id="status">
+                <option value="all" {{ (isset($status) && $status == 'all') ? 'selected' : '' }}>All Statuses</option>
+                <option value="pending" {{ (isset($status) && $status == 'pending') ? 'selected' : '' }}>Pending</option>
+                <option value="partial" {{ (isset($status) && $status == 'partial') ? 'selected' : '' }}>Partial</option>
+                <option value="delivered" {{ (isset($status) && $status == 'delivered') ? 'selected' : '' }}>Delivered</option>
             </select>
         </div>
     </div>

@@ -33,6 +33,8 @@ class SaleController extends Controller
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
         $customer = $request->customer ?? 'all';
+        $status = $request->status ?? 'all';
+        
         $sales = sale::whereBetween('date', [$from, $to])
             ->when($customer != 'all', function ($query) use ($customer) {
                 $query->where('customer_id', $customer);
@@ -40,9 +42,23 @@ class SaleController extends Controller
             ->orderby('id', 'desc')
             ->get();
 
+        if ($status != 'all') {
+            $sales = $sales->filter(function($sale) use ($status) {
+                $total_qty = $sale->details->sum('qty');
+                $total_delivered = $sale->details->sum('delivered_qty');
+                $delivery_status = 'pending';
+                if ($total_delivered >= $total_qty && $total_qty > 0) {
+                    $delivery_status = 'delivered';
+                } elseif ($total_delivered > 0) {
+                    $delivery_status = 'partial';
+                }
+                return $delivery_status == $status;
+            });
+        }
+
         $customers = accounts::active()->customer()->get();
 
-        return view('sale.index', compact('sales', 'from', 'to', 'customer', 'customers'));
+        return view('sale.index', compact('sales', 'from', 'to', 'customer', 'status', 'customers'));
     }
 
     /**
