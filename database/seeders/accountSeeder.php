@@ -14,7 +14,7 @@ class accountSeeder extends Seeder
     {
         accounts::create(
             [
-                'title' => 'Cash Account',
+                'title' => 'Cash',
                 'type' => 'Business',
                 'category' => 'Cash',
             ]
@@ -25,6 +25,14 @@ class accountSeeder extends Seeder
                 'title' => 'Daily Sale',
                 'type' => 'Customer',
 
+            ]
+        );
+
+        accounts::create(
+            [
+                'title' => 'Visa',
+                'type' => 'Business',
+                'category' => 'Bank',
             ]
         );
 

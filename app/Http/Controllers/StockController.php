@@ -49,18 +49,17 @@ class StockController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-        $type = $request->type ?? 'Finished Abaya';
 
         $product = products::find($id);
 
-        $pre_stocks = stock::where('item_id', $id)->where('item_type', 'App\Models\products')->where('date', '<', $from)->get();
+        $pre_stocks = stock::where('item_id', $id)->where('date', '<', $from)->get();
         $pre_balance = 0;
         foreach ($pre_stocks as $item) {
             $pre_balance += $item->cr;
             $pre_balance -= $item->db;
         }
 
-        $stocks = stock::where('item_id', $id)->where('item_type', 'App\Models\products')->whereBetween('date', [$from, $to])->get();
+        $stocks = stock::where('item_id', $id)->whereBetween('date', [$from, $to])->get();
 
         return view('product_mgmt.stock_details', compact('product', 'stocks', 'pre_balance', 'from', 'to'));
     }

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('issue_voucher_details', function (Blueprint $table) {
+        Schema::create('sale_deliveries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('issue_voucher_id')->constrained('issue_vouchers')->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained('products', 'id');
+            $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->float('qty');
-            $table->decimal('cost_at_issue', 10, 2);
+            $table->date('date');
+            $table->string('notes')->nullable();
+            $table->bigInteger('refID')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('issue_voucher_details');
+        Schema::dropIfExists('sale_deliveries');
     }
 };

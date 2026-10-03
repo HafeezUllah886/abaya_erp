@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->morphs('item');
+            $table->foreignId('item_id')->constrained('products')->onDelete('cascade');
             $table->date('date');
             $table->float('cr')->default(0);
             $table->float('db')->default(0);

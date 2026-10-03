@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products', 'id');
             $table->float('price', 10);
             $table->float('qty');
+            $table->float('delivered_qty')->default(0);
             $table->float('amount');
             $table->date('date');
             $table->bigInteger('refID');

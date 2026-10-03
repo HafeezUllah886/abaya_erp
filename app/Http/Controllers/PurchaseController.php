@@ -97,7 +97,7 @@ class PurchaseController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 'App\Models\products', $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
+                    createStock($id, $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
                 }
             }
             $purchase->update(
@@ -188,7 +188,7 @@ class PurchaseController extends Controller
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 'App\Models\products', $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
+                    createStock($id, $qty, 0, $request->date, "Purchased in $purchase->id", $ref);
                 }
             }
 

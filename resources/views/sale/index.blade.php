@@ -13,21 +13,54 @@
                         <table class="display app-data-table default-data-table" id="defaultDatatable">
                             <thead>
                                 <tr>
-                                    <th style="width: 10px;">#</th>
+                                    <th style="width: 10px;">Inv #</th>
                                     <th class="text-start">Date</th>
                                     <th class="text-start">Customer</th>
-                                    <th class="text-end">Total Amount</th>
+                                    <th class="text-start">Contact</th>
+                                    <th class="text-start">D-Date</th>
+                                    <th class="text-end">Bill</th>
+                                    <th class="text-end">Paid</th>
+                                    <th class="text-end">Balance</th>
+                                    <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($sales as $key => $sale)
-                                    <tr>
-                                        <td class="text-dark" style="width: 10px;">{{ $key + 1 }}</td>
+                                    @php
+                                        $paid_amount = $sale->payments->sum('amount');
+                                        $balance = $sale->total_bill - $paid_amount;
 
+                                        $total_qty = $sale->details->sum('qty');
+                                        $total_delivered = $sale->details->sum('delivered_qty');
+
+                                        $delivery_status = 'Pending';
+                                        $status_class = 'bg-danger';
+
+                                        if ($total_delivered >= $total_qty && $total_qty > 0) {
+                                            $delivery_status = 'Delivered';
+                                            $status_class = 'bg-success';
+                                        } elseif ($total_delivered > 0) {
+                                            $delivery_status = 'Partial';
+                                            $status_class = 'bg-warning text-dark';
+                                        }
+                                    @endphp
+                                    <tr>
+                                        <td class="text-dark" style="width: 10px;">{{ $sale->id }}</td>
                                         <td class="text-start">{{ date('d-m-Y', strtotime($sale->date)) }}</td>
-                                        <td class="text-start">{{ $sale->customer->title }}</td>
-                                        <td class="text-end">{{ number_format($sale->total) }}</td>
+                                        <td class="text-start">
+                                            {{ $sale->customer_id == 2 ? $sale->customer_name : $sale->customer->title }}
+                                        </td>
+                                        <td class="text-start">{{ $sale->contact }}</td>
+                                        <td class="text-start">
+                                            {{ $sale->delivery_date ? date('d-m-Y', strtotime($sale->delivery_date)) : '' }}
+                                        </td>
+                                        <td class="text-end">{{ number_format($sale->total_bill, 2) }}</td>
+                                        <td class="text-end">{{ number_format($paid_amount, 2) }}</td>
+                                        <td class="text-end">{{ number_format($balance, 2) }}</td>
+                                        <td class="text-center">
+                                            <span class="badge {{ $status_class }}">{{ $delivery_status }}</span>
+                                        </td>
 
                                         <td class="text-center">
                                             <div class="dropdown">

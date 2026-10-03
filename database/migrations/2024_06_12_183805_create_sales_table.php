@@ -17,8 +17,14 @@ return new class extends Migration
             $table->date('date');
             $table->float('total')->default(0);
             $table->text('notes')->nullable();
-            $table->enum('status', ['paid', 'pending'])->default('paid');
+            $table->date('delivery_date')->nullable();
+            $table->float('vat')->nullable();
+            $table->float('vat_amount')->nullable();
+            $table->float('total_bill')->nullable();
+            $table->string('customer_name')->nullable();
+            $table->string('contact')->nullable();
             $table->bigInteger('refID');
+
             $table->timestamps();
         });
     }

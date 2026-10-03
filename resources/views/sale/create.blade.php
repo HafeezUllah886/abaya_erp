@@ -214,7 +214,7 @@
                             ')" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="qty_' +
                             id + '"></td>';
                         html +=
-                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0.1" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="delivered_qty_' +
+                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="delivered_qty_' +
                             id + '"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1" id="amount_' +
@@ -274,17 +274,5 @@
 
             $("#totalPayment").html(total.toFixed(2));
         }
-
-        $("#saleForm").submit(function(e) {
-            var status = $('#status1').val();
-            if (status != 'pending') {
-                var total = parseFloat($("#totalAmount").text());
-                var payment = parseFloat($("#totalPayment").text());
-                if (total != payment) {
-                    e.preventDefault();
-                    alert("Total Amount and Total Payment must be equal.");
-                }
-            }
-        });
     </script>
 @endsection

@@ -35,12 +35,11 @@ function lastDayOfMonth()
     return $endOfMonth->format('Y-m-d');
 }
 
-function createStock($id, $type, $cr, $db, $date, $notes, $ref)
+function createStock($id, $cr, $db, $date, $notes, $ref)
 {
     stock::create(
         [
             'item_id' => $id,
-            'item_type' => $type,
             'cr' => $cr,
             'db' => $db,
             'date' => $date,
@@ -49,14 +48,9 @@ function createStock($id, $type, $cr, $db, $date, $notes, $ref)
         ]
     );
 }
-function getStock($id, $type)
+function getStock($id)
 {
-    if ($type == 'finished') {
-        $type = 'App\Models\products';
-    } else {
-        $type = 'App\Models\products';
-    }
-    $stocks = stock::where('item_id', $id)->where('item_type', $type)->get();
+    $stocks = stock::where('item_id', $id)->get();
     $balance = 0;
     foreach ($stocks as $stock) {
         $balance += $stock->cr;
@@ -66,9 +60,9 @@ function getStock($id, $type)
     return $balance;
 }
 
-function getStockOnTime($id, $type, $time)
+function getStockOnTime($id, $time)
 {
-    $stocks = stock::where('item_id', $id)->where('item_type', $type)->whereDate('created_at', '<=', $time)->get();
+    $stocks = stock::where('item_id', $id)->whereDate('created_at', '<=', $time)->get();
     $balance = 0;
     foreach ($stocks as $stock) {
         $balance += $stock->cr;

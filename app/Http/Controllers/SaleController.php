@@ -7,6 +7,7 @@ use App\Models\accounts;
 use App\Models\products;
 use App\Models\sale;
 use App\Models\sale_details;
+use App\Models\SaleDelivery;
 use App\Models\salePayments;
 use App\Models\stock;
 use App\Models\transactions;
@@ -71,9 +72,14 @@ class SaleController extends Controller
             $sale = sale::create(
                 [
                     'customer_id' => $request->customer_id,
+                    'customer_name' => $request->customer_name,
+                    'contact' => $request->contact,
                     'date' => $request->date,
+                    'delivery_date' => $request->delivery_date,
                     'notes' => $request->notes,
-                    'status' => $request->status,
+                    'vat' => $request->vat,
+                    'vat_amount' => $request->vat_amount,
+                    'total_bill' => $request->total_bill,
                     'refID' => $ref,
                 ]
             );
@@ -84,7 +90,8 @@ class SaleController extends Controller
                 if ($request->qty[$key] > 0) {
                     $qty = $request->qty[$key];
                     $price = $request->price[$key];
-                    $amount = $price * $qty;
+                    $amount = $request->amount[$key];
+                    $delivered_qty = $request->delivered_qty[$key] ?? 0;
                     $total += $amount;
 
                     sale_details::create(
@@ -93,12 +100,23 @@ class SaleController extends Controller
                             'product_id' => $id,
                             'price' => $price,
                             'qty' => $qty,
+                            'delivered_qty' => $delivered_qty,
                             'amount' => $amount,
                             'date' => $request->date,
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 'App\\Models\\products', 0, $qty, $request->date, "Sold in $sale->id", $ref);
+
+                    if ($delivered_qty > 0) {
+                        SaleDelivery::create([
+                            'sale_id' => $sale->id,
+                            'product_id' => $id,
+                            'qty' => $delivered_qty,
+                            'date' => $request->date,
+                            'refID' => $ref,
+                        ]);
+                        createStock($id, 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
+                    }
                 }
             }
             $sale->update(
@@ -106,31 +124,29 @@ class SaleController extends Controller
                     'total' => $total,
                 ]
             );
-            if ($request->status == 'paid') {
-                $account_ids = $request->account_id;
-                $payment_amount = $request->payment_amount;
-                $payment_notes = $request->payment_notes;
-                foreach ($account_ids as $key => $account_id) {
-                    if ($payment_amount[$key] > 0) {
-                        $account = accounts::find($account_id);
-                        createTransaction($account->id, $request->date, $payment_amount[$key], 0, "Payment of Sale # $sale->id Remarks".$payment_notes[$key], $ref);
 
-                        salePayments::create(
-                            [
-                                'sale_id' => $sale->id,
-                                'account_id' => $account_id,
-                                'amount' => $payment_amount[$key],
-                                'notes' => $payment_notes[$key],
-                                'date' => $request->date,
-                                'refID' => $ref,
-                            ]
-                        );
-                    }
+            $account_ids = $request->account_id;
+            $payment_amount = $request->payment_amount;
+            $payment_notes = $request->payment_notes;
+            foreach ($account_ids as $key => $account_id) {
+                if ($payment_amount[$key] > 0) {
+                    $account = accounts::find($account_id);
+                    createTransaction($account->id, $request->date, $payment_amount[$key], 0, "Payment of Sale # $sale->id Remarks".$payment_notes[$key], $ref);
 
+                    salePayments::create(
+                        [
+                            'sale_id' => $sale->id,
+                            'account_id' => $account_id,
+                            'amount' => $payment_amount[$key],
+                            'notes' => $payment_notes[$key],
+                            'date' => $request->date,
+                            'refID' => $ref,
+                        ]
+                    );
                 }
-            } else {
-                createTransaction($request->customer_id, $request->date, $total, 0, "Pending Amount of Sale # $sale->id", $ref);
+
             }
+
             DB::commit();
 
             return back()->with('success', 'Sale Created');
@@ -178,14 +194,21 @@ class SaleController extends Controller
             foreach ($sale->payments as $payment) {
                 $payment->delete();
             }
+            SaleDelivery::where('sale_id', $sale->id)->delete();
             transactions::where('refID', $sale->refID)->delete();
 
             $sale->update(
                 [
                     'customer_id' => $request->customer_id,
+                    'customer_name' => $request->customer_name,
+                    'contact' => $request->contact,
                     'date' => $request->date,
+                    'delivery_date' => $request->delivery_date,
                     'notes' => $request->notes,
-                    'status' => $request->status,
+                    'status' => $request->status ?? 'paid',
+                    'vat' => $request->vat,
+                    'vat_amount' => $request->vat_amount,
+                    'total_bill' => $request->total_bill,
                 ]
             );
 
@@ -197,7 +220,8 @@ class SaleController extends Controller
                 if ($request->qty[$key] > 0) {
                     $qty = $request->qty[$key];
                     $price = $request->price[$key];
-                    $amount = $price * $qty;
+                    $amount = $request->amount[$key];
+                    $delivered_qty = $request->delivered_qty[$key] ?? 0;
                     $total += $amount;
 
                     sale_details::create(
@@ -206,12 +230,23 @@ class SaleController extends Controller
                             'product_id' => $id,
                             'price' => $price,
                             'qty' => $qty,
+                            'delivered_qty' => $delivered_qty,
                             'amount' => $amount,
                             'date' => $request->date,
                             'refID' => $ref,
                         ]
                     );
-                    createStock($id, 'App\\Models\\products', 0, $qty, $request->date, "Sold in $sale->id", $ref);
+
+                    if ($delivered_qty > 0) {
+                        SaleDelivery::create([
+                            'sale_id' => $sale->id,
+                            'product_id' => $id,
+                            'qty' => $delivered_qty,
+                            'date' => $request->date,
+                            'refID' => $ref,
+                        ]);
+                        createStock($id, 'App\\Models\\products', 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
+                    }
                 }
             }
 
@@ -274,6 +309,7 @@ class SaleController extends Controller
             foreach ($sale->payments as $payment) {
                 $payment->delete();
             }
+            SaleDelivery::where('sale_id', $sale->id)->delete();
             transactions::where('refID', $sale->refID)->delete();
             $sale->delete();
             DB::commit();

@@ -50,9 +50,9 @@ class StockAdjustmentController extends Controller
             );
 
             if ($request->type == 'Credit') {
-                createStock($request->product_id, 'App\Models\products', $request->qty, 0, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
+                createStock($request->product_id, $request->qty, 0, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
             } else {
-                createStock($request->product_id, 'App\Models\products', 0, $request->qty, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
+                createStock($request->product_id, 0, $request->qty, $request->date, 'Stock Adjusted notes - '.$request->notes, $ref);
             }
 
             DB::commit();
@@ -70,9 +70,9 @@ class StockAdjustmentController extends Controller
      */
     public function show($id)
     {
-        $receiving = paymentReceiving::find($id);
+        $adjustment = stockAdjustments::find($id);
 
-        return view('finance.receiving.receipt', compact('receiving'));
+        return view('product_mgmt.show', compact('adjustment'));
     }
 
     public function edit(paymentReceiving $paymentReceiving)
