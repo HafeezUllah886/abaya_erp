@@ -330,4 +330,72 @@ class SaleController extends Controller
 
         return $product;
     }
+
+    public function deliver($id)
+    {
+        $sale = sale::with('details.product', 'payments')->find($id);
+        $accounts = accounts::active()->business()->get();
+        $paid_amount = $sale->payments->sum('amount');
+        $balance = $sale->total_bill - $paid_amount;
+        
+        return view('sale.deliver', compact('sale', 'accounts', 'balance'));
+    }
+
+    public function storeDelivery(Request $request, $id)
+    {
+        $sale = sale::find($id);
+        
+        // Handle delivery
+        $deliver_now = $request->input('deliver_now', []);
+        if (is_array($deliver_now) && count($deliver_now) > 0) {
+            $ref = getRef();
+            foreach ($deliver_now as $product_id => $qty) {
+                if ($qty > 0) {
+                    $saleDetail = $sale->details()->where('product_id', $product_id)->first();
+                    if ($saleDetail) {
+                        $new_delivered_qty = $saleDetail->delivered_qty + $qty;
+                        $saleDetail->update(['delivered_qty' => $new_delivered_qty]);
+                        
+                        SaleDelivery::create([
+                            'sale_id' => $sale->id,
+                            'product_id' => $product_id,
+                            'qty' => $qty,
+                            'date' => $request->date,
+                            'refID' => $ref,
+                        ]);
+                        
+                        // Deduct from stock
+                        createStock($product_id, 0, $qty, $request->date, "Delivered in Sale # $sale->id" . ($request->notes ? " Notes: " . $request->notes : ""), $ref);
+                    }
+                }
+            }
+        }
+        
+        // Handle payments
+        if ($request->has('account_id') && $request->has('payment_amount')) {
+            $ref = getRef();
+            $account_ids = $request->account_id;
+            $payment_amount = $request->payment_amount;
+            $payment_notes = $request->payment_notes;
+            foreach ($account_ids as $key => $account_id) {
+                if ($payment_amount[$key] > 0) {
+                    $account = accounts::find($account_id);
+                    createTransaction($account->id, $request->date, $payment_amount[$key], 0, "Payment of Sale # $sale->id Remarks: ".$payment_notes[$key], $ref);
+
+                    salePayments::create(
+                        [
+                            'sale_id' => $sale->id,
+                            'account_id' => $account_id,
+                            'amount' => $payment_amount[$key],
+                            'notes' => $payment_notes[$key],
+                            'date' => $request->date,
+                            'refID' => $ref,
+                        ]
+                    );
+                }
+            }
+        }
+        
+        return redirect()->route('sale.index')->with('success', 'Delivery and payment updated successfully.');
+    }
 }

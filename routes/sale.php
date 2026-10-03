@@ -10,5 +10,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('sales/getproduct/{id}', [SaleController::class, 'getSignleProduct']);
     Route::get('sale/delete/{id}', [SaleController::class, 'destroy'])->name('sales.delete')->middleware(ConfirmPassword::class);
+    Route::get('sale/deliver/{id}', [SaleController::class, 'deliver'])->name('sale.deliver');
+    Route::post('sale/deliver/{id}', [SaleController::class, 'storeDelivery'])->name('sale.deliver.store');
 
 });

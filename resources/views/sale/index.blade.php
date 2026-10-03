@@ -75,6 +75,11 @@
                                                     <li><a class="dropdown-item"
                                                             href="{{ route('sale.edit', $sale->id) }}"><i
                                                                 class="ti ti-edit me-2 text-secondary"></i> Edit</a></li>
+                                                    @if ($total_qty > $total_delivered || $balance > 0)
+                                                        <li><a class="dropdown-item"
+                                                                href="{{ route('sale.deliver', $sale->id) }}"><i
+                                                                    class="ti ti-truck me-2 text-info"></i> Deliver</a></li>
+                                                    @endif
                                                     <li>
                                                         <a class="dropdown-item text-danger"
                                                             href="{{ route('sales.delete', $sale->id) }}"><i
