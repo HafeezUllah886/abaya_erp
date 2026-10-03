@@ -39,6 +39,7 @@
                                         <th width="30%">Item</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Qty</th>
+                                        <th class="text-center">Delivered</th>
                                         <th class="text-end">Amount</th>
                                         <th></th>
                                     </thead>
@@ -53,12 +54,18 @@
                                                 <td class="p-0"><input type="number" name="price[]" step="any"
                                                         value="{{ $item->price }}" min="0"
                                                         class="form-control form-control-sm text-center p-1"
-                                                        id="price_{{ $product_id }}"></td>
+                                                        id="price_{{ $product_id }}"
+                                                        oninput="updateChanges({{ $product_id }})"></td>
                                                 <td class="p-0"><input type="number" name="qty[]"
                                                         oninput="updateChanges({{ $product_id }})" min="0"
                                                         step="any" value="{{ $item->qty }}"
                                                         class="form-control form-control-sm text-center p-1"
                                                         id="qty_{{ $product_id }}"></td>
+                                                <td class="p-0"><input type="number" name="delivered_qty[]"
+                                                        min="0" step="any"
+                                                        value="{{ $item->delivered_qty ?? 0 }}"
+                                                        class="form-control form-control-sm text-center p-1"
+                                                        id="delivered_qty_{{ $product_id }}"></td>
                                                 <td class="p-0"><input type="number" name="amount[]" min="0.1"
                                                         readonly required step="any" value="{{ $item->amount }}"
                                                         class="form-control form-control-sm text-center p-1"
@@ -70,7 +77,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="3" class="text-end">Total</th>
+                                            <th colspan="4" class="text-end">Total</th>
                                             <th class="text-end" id="totalAmount">{{ number_format($sale->total, 2) }}</th>
                                             <th></th>
                                         </tr>
@@ -86,6 +93,33 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
+                                    <label for="date">Delivery Date</label>
+                                    <input type="date" name="delivery_date" id="delivery_date" required
+                                        value="{{ date('Y-m-d', strtotime($sale->delivery_date ?? $sale->date)) }}"
+                                        class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="vat">VAT (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" name="vat" id="vat" oninput="updateTotal()"
+                                            value="{{ $sale->vat ?? 5 }}" class="form-control">
+                                        <input type="number" name="vat_amount" id="vat_amount" readonly
+                                            value="{{ $sale->vat_amount ?? 0 }}" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="vat">Total Bill</label>
+                                    <input type="number" name="total_bill" id="total_bill" readonly
+                                        value="{{ $sale->total_bill ?? 0 }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
                                     <label for="customer">Customer</label>
                                     <select name="customer_id" id="customer_id" required class="select2 w-100">
                                         @foreach ($customers as $customer)
@@ -94,20 +128,19 @@
                                                 {{ $customer->title }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="customer_name" id="customer_name" class="form-control mt-2"
+                                        placeholder="Enter Customer Name" name="customer_name"
+                                        value="{{ $sale->customer_name ?? '' }}">
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
-                                    <label for="status">Payment Status</label>
-                                    <select name="status" id="status1" onchange="checkStatus(this.value)"
-                                        class="form-control">
-                                        <option value="paid" {{ $sale->status == 'paid' ? 'selected' : '' }}>Paid
-                                        </option>
-                                        <option value="pending" {{ $sale->status == 'pending' ? 'selected' : '' }}>Pending
-                                        </option>
-                                    </select>
+                                    <label for="contact">Contact Number</label>
+                                    <input type="text" name="contact" id="contact" class="form-control"
+                                        value="{{ $sale->contact ?? '' }}">
                                 </div>
                             </div>
+
                             <div class="col-12" id="accounts">
                                 <table class="table table-striped table-hover">
                                     <thead>
@@ -178,7 +211,20 @@
                 allowClear: true,
                 width: '100%'
             });
+
+            checkCustomer();
+            $("#customer_id").on('change', function() {
+                checkCustomer();
+            });
         });
+
+        function checkCustomer() {
+            if ($("#customer_id").val() == 2) {
+                $("#customer_name").show();
+            } else {
+                $("#customer_name").hide();
+            }
+        }
 
         $("#product").on('select2:select', function(e) {
             var value = e.params.data.id;
@@ -209,11 +255,16 @@
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +
                             '" min="0" class="form-control form-control-sm text-center p-1" id="price_' + id +
-                            '"></td>';
+                            '" oninput="updateChanges(' +
+                            id +
+                            ')"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="qty[]" min="0.1" oninput="updateChanges(' +
                             id +
                             ')" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="qty_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="delivered_qty_' +
                             id + '"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1" id="amount_' +
@@ -247,6 +298,11 @@
             });
 
             $("#totalAmount").html(total.toFixed(2));
+
+            var vat = parseFloat($("#vat").val()) || 0;
+            var vat_amount = total * (vat / 100);
+            $("#vat_amount").val(vat_amount.toFixed(2));
+            $("#total_bill").val((total + vat_amount).toFixed(2));
         }
 
         function deleteRow(id) {

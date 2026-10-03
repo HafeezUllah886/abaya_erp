@@ -84,7 +84,7 @@ class ManufacturingOrderController extends Controller
                     ]);
 
                     if ($received_qty > 0) {
-                        createStock($product_id, 'App\Models\products', $received_qty, 0, $request->date, 'Received from tailor for Mfg Order #'.$order->id, $ref);
+                        createStock($product_id, $received_qty, 0, $request->date, 'Received from tailor for Mfg Order #'.$order->id, $ref);
                     }
                 }
             }
@@ -108,7 +108,7 @@ class ManufacturingOrderController extends Controller
                     ]);
 
                     if ($own_qty > 0) {
-                        createStock($material_id, 'App\Models\products', 0, $own_qty, $request->date, 'Issued to tailor for Mfg Order #'.$order->id, $ref);
+                        createStock($material_id, 0, $own_qty, $request->date, 'Issued to tailor for Mfg Order #'.$order->id, $ref);
                     }
                 }
             }

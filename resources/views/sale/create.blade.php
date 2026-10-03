@@ -207,7 +207,9 @@
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +
                             '" min="0" class="form-control form-control-sm text-center p-1" id="price_' + id +
-                            '"></td>';
+                            '" oninput="updateChanges(' +
+                            id +
+                            ')"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="qty[]" min="0.1" oninput="updateChanges(' +
                             id +
