@@ -26,8 +26,8 @@
 
                             <div class="form-group mt-2">
                                 <label for="categories">Categories</label>
-                                <select name="category" id="categories" class="form-control select2" required>
-                                    <option value="All">All Categories</option>
+                                <select name="category" id="categories" class="form-control select2">
+                                    <option></option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
