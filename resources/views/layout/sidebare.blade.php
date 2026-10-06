@@ -118,6 +118,47 @@
          <div class="nav-wrapper app-scroll app-simple-bar">
 
              <div class="main-side-menu">
+                 <!-- Bookmarks Menu (Visible globally if user has bookmarks) -->
+                 @if(auth()->check() && is_array(auth()->user()->bookmarks) && count(auth()->user()->bookmarks) > 0)
+                     @php
+                         $availableLinks = [
+                             'dashboard' => 'Dashboard',
+                             'sale.create' => 'Create Sale',
+                             'sale.index' => 'Sales History',
+                             'purchase.create' => 'Create Purchase',
+                             'purchase.index' => 'Purchase History',
+                             'manufacturing_orders.create' => 'Create Order',
+                             'manufacturing_orders.index' => 'Order History',
+                             'account.create' => 'Create Account',
+                             'receivings.index' => 'Receive Payments',
+                             'issue.index' => 'Issue Payments',
+                             'transfers.index' => 'Transfers',
+                             'adjustments.index' => 'Accounts Adjustment',
+                             'expenses.index' => 'Expenses',
+                             'products.index' => 'Products',
+                             'stock-adjustments.index' => 'Stock Adjustment',
+                             'reports.profit_loss' => 'Profit / Loss Report',
+                             'reportCashbook' => 'Daily Cashbook',
+                             'reportExpense' => 'Expenses Report',
+                             'reportActivity' => 'Activity Report',
+                         ];
+                     @endphp
+                     <ul class="bookmarks-menu list-unstyled mb-3" style="display: block;">
+                         <li class="nav-label text-uppercase text-primary f-w-700 f-s-11 mb-2 mt-3 px-3">Bookmarked Links</li>
+                         @foreach(auth()->user()->bookmarks as $bRoute)
+                             @if(isset($availableLinks[$bRoute]) && Route::has($bRoute))
+                                 <li class="no-sub {{ $routeName == $bRoute ? 'active' : '' }}">
+                                     <a href="{{ route($bRoute) }}" class="{{ $routeName == $bRoute ? 'active' : '' }} d-flex align-items-center py-2 px-3 text-dark text-decoration-none action-hover">
+                                         <i class="ti ti-bookmark me-2 text-primary f-s-14"></i>
+                                         {{ $availableLinks[$bRoute] }}
+                                     </a>
+                                 </li>
+                             @endif
+                         @endforeach
+                         <li class="border-bottom my-2"></li>
+                     </ul>
+                 @endif
+                 
                  <!-- Home -->
                  <ul class="main-menu {{ $activeMenu == 'homePage' ? 'active' : '' }}" id="homePage"
                      style="display: {{ $activeMenu == 'homePage' ? 'block' : 'none' }};">
@@ -265,6 +306,9 @@
                      <li class="no-sub {{ $routeName == 'profile' ? 'active' : '' }}"><a
                              href="{{ route('profile') }}"
                              class="{{ $routeName == 'profile' ? 'active' : '' }}">Profile</a></li>
+                     <li class="no-sub {{ $routeName == 'bookmarks' ? 'active' : '' }}"><a
+                             href="{{ route('bookmarks') }}"
+                             class="{{ $routeName == 'bookmarks' ? 'active' : '' }}">Bookmarks</a></li>
                      {{--   <li class="no-sub"><a href="#">Users</a></li> --}}
                      <li class="no-sub"><a href="{{ route('logout') }}">Logout</a></li>
                  </ul>
