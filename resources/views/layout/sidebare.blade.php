@@ -251,11 +251,12 @@
                              Report</a>
                      </li>
                      <li
-                         class="no-sub {{ $routeName == 'reportDailySheet' || $routeName == 'reportDailySheetData' ? 'active' : '' }}">
-                         <a href="{{ route('reportDailySheet') }}"
-                             class="{{ $routeName == 'reportDailySheet' || $routeName == 'reportDailySheetData' ? 'active' : '' }}">Daily
-                             Sheet</a>
+                         class="no-sub {{ $routeName == 'reportActivity' || $routeName == 'reportActivityData' ? 'active' : '' }}">
+                         <a href="{{ route('reportActivity') }}"
+                             class="{{ $routeName == 'reportActivity' || $routeName == 'reportActivityData' ? 'active' : '' }}">Activity
+                             Report</a>
                      </li>
+
                  </ul>
 
                  <!-- Settings -->

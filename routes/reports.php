@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityReportController;
 use App\Http\Controllers\dailycashbookController;
 use App\Http\Controllers\DailysheetController;
 use App\Http\Controllers\ExpenseReportController;
@@ -21,4 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/dailysheet-data', [DailysheetController::class, 'details'])->name('reportDailySheetData');
     Route::post('/reports/dailysheet-store', [DailysheetController::class, 'store'])->name('reportDailySheetStore');
     Route::get('/reports/dailysheet-view/{id}', [DailysheetController::class, 'view'])->name('reportDailySheetView');
+
+    Route::get('/reports/activity', [ActivityReportController::class, 'index'])->name('reportActivity');
+    Route::get('/reports/activity-data', [ActivityReportController::class, 'details'])->name('reportActivityData');
 });
