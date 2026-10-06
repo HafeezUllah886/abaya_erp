@@ -1,469 +1,314 @@
 @extends('layout.app')
 
-@section('page-css')
-    <style>
-        /* Premium dashboard styles */
-        .metric-card {
-            border: none;
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            overflow: hidden;
-            position: relative;
-        }
+@section('content')
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="mb-2 text-primary f-w-700">Business Dashboard</h4>
+            <p class="text-muted f-s-13">Welcome back! Here's what's happening with your store today.</p>
+        </div>
+    </div>
 
-        .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-        }
+    <!-- Top Balances Row -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-primary-light">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Business Balance</p>
+                        <h3 class="mb-0 text-primary f-w-800">{{ number_format($businessBalance, 2) }}</h3>
+                    </div>
+                    <div class="h-50 w-50 d-flex-center bg-primary rounded-circle text-white shadow-sm" style="width: 50px !important; height: 50px !important;">
+                        <i class="ti ti-building-bank f-s-24"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-success-light">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Customer Receivables</p>
+                        <h3 class="mb-0 text-success f-w-800">{{ number_format($customerReceivables, 2) }}</h3>
+                    </div>
+                    <div class="h-50 w-50 d-flex-center bg-success rounded-circle text-white shadow-sm" style="width: 50px !important; height: 50px !important;">
+                        <i class="ti ti-arrow-down-right f-s-24"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-warning-light">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Supplier Payables</p>
+                        <h3 class="mb-0 text-warning f-w-800">{{ number_format($supplierPayables, 2) }}</h3>
+                    </div>
+                    <div class="h-50 w-50 d-flex-center bg-warning rounded-circle text-white shadow-sm" style="width: 50px !important; height: 50px !important;">
+                        <i class="ti ti-arrow-up-right f-s-24"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-info-light">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Pending Orders</p>
+                        <h3 class="mb-0 text-info f-w-800">{{ number_format($pendingOrders) }}</h3>
+                    </div>
+                    <div class="h-50 w-50 d-flex-center bg-info rounded-circle text-white shadow-sm" style="width: 50px !important; height: 50px !important;">
+                        <i class="ti ti-truck-delivery f-s-24"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-        }
+    <!-- Current Month Row -->
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h5 class="text-muted f-w-600 mb-0">Current Month Profile ({{ date('F Y') }})</h5>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3">
+                    <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Sales</p>
+                    <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthSales, 2) }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3">
+                    <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Purchases</p>
+                    <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthPurchases, 2) }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3">
+                    <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Expenses</p>
+                    <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthExpenses, 2) }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 {{ $currentMonthProfit >= 0 ? 'border-success border-bottom border-3' : 'border-danger border-bottom border-3' }}">
+                <div class="card-body p-3">
+                    <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Net Profit</p>
+                    <h4 class="mb-0 {{ $currentMonthProfit >= 0 ? 'text-success' : 'text-danger' }} f-w-800">{{ number_format($currentMonthProfit, 2) }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        /* Card color accents */
-        .card-accent-primary::before {
-            background: linear-gradient(180deg, #5c60f5, #888cf8);
-        }
+    <!-- Charts and Top Products Row -->
+    <div class="row">
+        <!-- Monthly Trend Chart -->
+        <div class="col-xl-8 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white pt-4 pb-0 border-0">
+                    <h6 class="mb-0 f-w-700 text-dark">6-Month Trend (Sales, Expenses, Profit)</h6>
+                </div>
+                <div class="card-body p-3">
+                    <div id="monthlyTrendChart" class="w-100"></div>
+                </div>
+            </div>
+        </div>
 
-        .card-accent-success::before {
-            background: linear-gradient(180deg, #2cc76f, #5ddc92);
-        }
+        <!-- Top 10 Products -->
+        <div class="col-xl-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white pt-4 pb-2 border-0">
+                    <h6 class="mb-0 f-w-700 text-dark">Top 10 Products (This Month)</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+                        <table class="table table-hover table-borderless align-middle mb-0">
+                            <thead class="table-light position-sticky top-0 shadow-sm" style="z-index: 1;">
+                                <tr>
+                                    <th class="py-2 f-s-12 text-muted">Product</th>
+                                    <th class="py-2 f-s-12 text-muted text-center">Qty</th>
+                                    <th class="py-2 f-s-12 text-muted text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($topProducts as $tp)
+                                    <tr class="border-bottom border-light">
+                                        <td class="py-2 f-w-600 f-s-13 text-dark">{{ $tp->product->name ?? 'Unknown' }}</td>
+                                        <td class="py-2 text-center f-s-13">{{ number_format($tp->total_qty) }}</td>
+                                        <td class="py-2 text-end f-w-600 text-success f-s-13">{{ number_format($tp->total_amount, 2) }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="py-4 text-center text-muted f-s-13">No sales yet this month.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        .card-accent-warning::before {
-            background: linear-gradient(180deg, #ff9f43, #ffbd80);
-        }
+    <!-- Recent Lists Row -->
+    <div class="row">
+        <!-- Recent Activities -->
+        <div class="col-xl-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white pt-4 pb-2 border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 f-w-700 text-dark">Recent Activities</h6>
+                    <a href="{{ route('reportActivity') }}" class="btn btn-sm btn-light text-primary f-s-12">View All</a>
+                </div>
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column gap-3">
+                        @forelse($recentActivities as $act)
+                            <div class="d-flex align-items-center p-3 rounded bg-light border-start border-{{ $act['color'] }} border-3 shadow-sm">
+                                <div class="me-3">
+                                    <span class="badge bg-{{ $act['color'] }} rounded-pill p-2" style="width: 70px;">{{ $act['type'] }}</span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 f-s-13 f-w-600">{{ $act['desc'] }}</h6>
+                                    <p class="mb-0 text-muted f-s-11">{{ \Carbon\Carbon::parse($act['date'])->diffForHumans() }}</p>
+                                </div>
+                                <div class="ms-auto text-end">
+                                    <h6 class="mb-0 f-w-700 text-{{ $act['color'] }}">{{ number_format($act['amount'], 2) }}</h6>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center p-4 text-muted f-s-13">No recent activities.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .card-accent-info::before {
-            background: linear-gradient(180deg, #00cfe8, #55e0f0);
-        }
-
-        .card-accent-secondary::before {
-            background: linear-gradient(180deg, #82868b, #aeb2b7);
-        }
-
-        .card-accent-purple::before {
-            background: linear-gradient(180deg, #a065f9, #c7a4fc);
-        }
-
-        .card-accent-danger::before {
-            background: linear-gradient(180deg, #ea5455, #f18c8e);
-        }
-
-        .icon-box {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        /* Icon background opacity classes */
-        .icon-bg-primary {
-            background-color: rgba(92, 96, 245, 0.1);
-            color: #5c60f5;
-        }
-
-        .icon-bg-success {
-            background-color: rgba(44, 199, 111, 0.1);
-            color: #2cc76f;
-        }
-
-        .icon-bg-warning {
-            background-color: rgba(255, 159, 67, 0.1);
-            color: #ff9f43;
-        }
-
-        .icon-bg-info {
-            background-color: rgba(0, 207, 232, 0.1);
-            color: #00cfe8;
-        }
-
-        .icon-bg-secondary {
-            background-color: rgba(130, 134, 139, 0.1);
-            color: #82868b;
-        }
-
-        .icon-bg-purple {
-            background-color: rgba(160, 101, 249, 0.1);
-            color: #a065f9;
-        }
-
-        .icon-bg-danger {
-            background-color: rgba(234, 84, 85, 0.1);
-            color: #ea5455;
-        }
-
-        .metric-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #82868b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .metric-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2f2f3b;
-        }
-
-        .chart-card {
-            border: none;
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            margin-bottom: 24px;
-        }
-
-        .chart-card .card-header {
-            background: transparent;
-            border-bottom: 1px solid #f1f3f4;
-            padding: 20px 24px;
-        }
-
-        .chart-card .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2f2f3b;
-            margin-bottom: 0;
-        }
-    </style>
+        <!-- Recent Expenses -->
+        <div class="col-xl-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white pt-4 pb-2 border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 f-w-700 text-dark">Recent Expenses</h6>
+                    <a href="{{ route('reportExpense') }}" class="btn btn-sm btn-light text-primary f-s-12">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="py-3 px-4 f-s-12 text-muted">Date</th>
+                                    <th class="py-3 f-s-12 text-muted">Category</th>
+                                    <th class="py-3 px-4 f-s-12 text-muted text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentExpenses as $exp)
+                                    <tr>
+                                        <td class="py-3 px-4 f-s-13">
+                                            <span class="f-w-600 text-dark">{{ \Carbon\Carbon::parse($exp->date)->format('d M') }}</span>
+                                            <span class="text-muted ms-1 f-s-11">{{ \Carbon\Carbon::parse($exp->created_at)->format('H:i') }}</span>
+                                        </td>
+                                        <td class="py-3 f-s-13 text-dark">
+                                            <i class="ti ti-wallet text-danger me-2"></i>
+                                            {{ $exp->category->name ?? 'Misc' }}
+                                        </td>
+                                        <td class="py-3 px-4 text-end f-w-700 text-danger f-s-13">
+                                            {{ number_format($exp->amount, 2) }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="py-4 text-center text-muted f-s-13">No recent expenses.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@section('content')
-    <!-- Dashboard Header -->
-    <div class="d-flex align-items-center justify-content-between mb-2 mt-2">
-        <div>
-            <h3 class="mb-1 text-dark f-w-700">Business Dashboard</h3>
-            <p class="text-secondary mb-0">Overview of sales, purchases, and cash flows for {{ projectName() }}</p>
-        </div>
-        <div class="text-secondary f-w-600">
-            <i class="ti ti-calendar me-1"></i> {{ date('F Y') }}
-        </div>
-    </div>
-
-    <!-- Row 1: Primary Month Metrics -->
-    <div class="row g-2 mb-2">
-        <!-- Month Sales -->
-        <div class="col-xl-3 col-md-6 col-sm-12">
-            <div class="card metric-card card-accent-primary">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Sales This Month</div>
-                        <div class="metric-value">Rs. {{ number_format($currentMonthSales, 2) }}</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Month Expenses -->
-        <div class="col-xl-3 col-md-6 col-sm-12">
-            <div class="card metric-card card-accent-warning">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Expenses This Month</div>
-                        <div class="metric-value">Rs. {{ number_format($currentMonthExpenses, 2) }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Month Net Profit -->
-        <div class="col-xl-3 col-md-6 col-sm-12">
-            <div class="card metric-card card-accent-success">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Net Profit This Month</div>
-                        <div class="metric-value @if ($currentMonthProfit < 0) text-danger @endif">
-                            Rs. {{ number_format($currentMonthProfit, 2) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Business Accounts Balance -->
-        <div class="col-xl-3 col-md-6 col-sm-12">
-            <div class="card metric-card card-accent-info">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Cash & Bank Balance</div>
-                        <div class="metric-value">Rs. {{ number_format($businessBalance, 2) }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Row 2: Secondary / Stock & Balances Metrics -->
-    <div class="row g-2 mb-2">
-        <!-- Stock Value -->
-        <div class="col-md-4 col-sm-12">
-            <div class="card metric-card card-accent-secondary">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Current Stock Value</div>
-                        <div class="metric-value">Rs. {{ number_format($stockVal, 2) }}</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Customer Receivables -->
-        <div class="col-md-4 col-sm-12">
-            <div class="card metric-card card-accent-purple">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Customer Receivables</div>
-                        <div class="metric-value">Rs. {{ number_format($customerReceivables, 2) }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Supplier Payables -->
-        <div class="col-md-4 col-sm-12">
-            <div class="card metric-card card-accent-danger">
-                <div class="card-body d-flex align-items-center justify-content-between p-4">
-                    <div>
-                        <div class="metric-title">Supplier Payables</div>
-                        <div class="metric-value">Rs. {{ number_format($supplierPayables, 2) }}</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Row 3: Charts -->
-    <div class="row">
-        <!-- Monthly Sale & Expense Chart -->
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="card chart-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title">Monthly Sale & Expense Overview</h5>
-                    <span class="badge bg-light-primary text-primary">Last 6 Months</span>
-                </div>
-                <div class="card-body p-4">
-                    <div id="sale-expense-chart-container" style="min-height: 320px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Monthly Profit Chart -->
-        <div class="col-lg-4 col-md-12 col-sm-12">
-            <div class="card chart-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title">Monthly Profit Trend</h5>
-                    <span class="badge bg-light-success text-success">Last 6 Months</span>
-                </div>
-                <div class="card-body p-4">
-                    <div id="profit-chart-container" style="min-height: 320px;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+@section('page-css')
+<style>
+    .bg-primary-light { background-color: rgba(13, 110, 253, 0.08) !important; }
+    .bg-success-light { background-color: rgba(40, 167, 69, 0.08) !important; }
+    .bg-warning-light { background-color: rgba(255, 193, 7, 0.08) !important; }
+    .bg-danger-light { background-color: rgba(220, 53, 69, 0.08) !important; }
+    .bg-info-light { background-color: rgba(13, 202, 240, 0.08) !important; }
+</style>
 @endsection
 
 @section('page-js')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Data passed from DashboardController
-            const categories = @json($months);
-            const salesData = @json($salesData);
-            const expensesData = @json($expensesData);
-            const profitData = @json($profitData);
-
-            // 1. Sales & Expenses Chart Options
-            const saleExpenseOptions = {
-                series: [{
-                        name: 'Sales',
-                        data: salesData
-                    },
-                    {
-                        name: 'Expenses',
-                        data: expensesData
-                    }
-                ],
-                chart: {
-                    type: 'bar',
-                    height: 320,
-                    toolbar: {
-                        show: false
-                    },
-                    fontFamily: 'Lexend Deca, sans-serif'
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
-                        borderRadius: 6,
-                        endingShape: 'rounded'
-                    },
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ['transparent']
-                },
-                xaxis: {
-                    categories: categories,
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    labels: {
-                        style: {
-                            colors: '#6c757d',
-                            fontSize: '12px'
-                        }
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Rs. (Amount)',
-                        style: {
-                            color: '#6c757d',
-                            fontWeight: 600
-                        }
-                    },
-                    labels: {
-                        formatter: function(val) {
-                            return val >= 1000 ? (val / 1000) + 'k' : val;
-                        },
-                        style: {
-                            colors: '#6c757d',
-                            fontSize: '12px'
-                        }
-                    }
-                },
-                fill: {
-                    opacity: 1
-                },
-                colors: ['#5c60f5', '#ff9f43'],
-                grid: {
-                    strokeDashArray: 4,
-                    borderColor: '#f1f3f4'
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    fontFamily: 'Lexend Deca, sans-serif',
-                    markers: {
-                        radius: 12
-                    }
-                },
-                tooltip: {
-                    y: {
-                        formatter: function(val) {
-                            return "Rs. " + val.toLocaleString();
-                        }
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var options = {
+            series: [{
+                name: 'Sales',
+                data: {!! json_encode($salesData) !!}
+            }, {
+                name: 'Expenses',
+                data: {!! json_encode($expensesData) !!}
+            }, {
+                name: 'Net Profit',
+                data: {!! json_encode($profitData) !!}
+            }],
+            chart: {
+                height: 380,
+                type: 'area',
+                toolbar: { show: false },
+                fontFamily: 'inherit'
+            },
+            colors: ['#28a745', '#dc3545', '#0d6efd'],
+            dataLabels: { enabled: false },
+            stroke: {
+                curve: 'smooth',
+                width: [2, 2, 3],
+                dashArray: [0, 0, 0]
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.05,
+                    stops: [0, 90, 100]
+                }
+            },
+            xaxis: {
+                categories: {!! json_encode($months) !!},
+                axisBorder: { show: false },
+                axisTicks: { show: false },
+                labels: { style: { colors: '#a1aab2' } }
+            },
+            yaxis: {
+                labels: {
+                    style: { colors: '#a1aab2' },
+                    formatter: function (value) {
+                        if(value >= 1000) return (value / 1000).toFixed(1) + "k";
+                        return value;
                     }
                 }
-            };
+            },
+            grid: {
+                borderColor: 'rgba(0,0,0,0.05)',
+                strokeDashArray: 4,
+            },
+            tooltip: {
+                theme: 'light',
+                y: { formatter: function (val) { return val.toFixed(2); } }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right'
+            }
+        };
 
-            // Render Sales & Expenses Chart
-            const saleExpenseChart = new ApexCharts(
-                document.querySelector("#sale-expense-chart-container"),
-                saleExpenseOptions
-            );
-            saleExpenseChart.render();
-
-
-            // 2. Net Profit Chart Options
-            const profitOptions = {
-                series: [{
-                    name: 'Net Profit',
-                    data: profitData
-                }],
-                chart: {
-                    type: 'area',
-                    height: 320,
-                    toolbar: {
-                        show: false
-                    },
-                    fontFamily: 'Lexend Deca, sans-serif'
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 3,
-                    colors: ['#2cc76f']
-                },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.45,
-                        opacityTo: 0.05,
-                        stops: [0, 100]
-                    }
-                },
-                xaxis: {
-                    categories: categories,
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    labels: {
-                        style: {
-                            colors: '#6c757d',
-                            fontSize: '11px'
-                        }
-                    }
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function(val) {
-                            return val >= 1000 ? (val / 1000) + 'k' : val;
-                        },
-                        style: {
-                            colors: '#6c757d',
-                            fontSize: '12px'
-                        }
-                    }
-                },
-                colors: ['#2cc76f'],
-                grid: {
-                    strokeDashArray: 4,
-                    borderColor: '#f1f3f4'
-                },
-                tooltip: {
-                    y: {
-                        formatter: function(val) {
-                            return "Rs. " + val.toLocaleString();
-                        }
-                    }
-                }
-            };
-
-            // Render Profit Chart
-            const profitChart = new ApexCharts(
-                document.querySelector("#profit-chart-container"),
-                profitOptions
-            );
-            profitChart.render();
-        });
-    </script>
+        var chart = new ApexCharts(document.querySelector("#monthlyTrendChart"), options);
+        chart.render();
+    });
+</script>
 @endsection
