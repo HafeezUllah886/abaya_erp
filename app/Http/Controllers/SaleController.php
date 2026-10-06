@@ -34,7 +34,7 @@ class SaleController extends Controller
         $to = $request->to ?? lastDayOfMonth();
         $customer = $request->customer ?? 'all';
         $status = $request->status ?? 'all';
-        
+
         $sales = sale::whereBetween('date', [$from, $to])
             ->when($customer != 'all', function ($query) use ($customer) {
                 $query->where('customer_id', $customer);
@@ -43,7 +43,7 @@ class SaleController extends Controller
             ->get();
 
         if ($status != 'all') {
-            $sales = $sales->filter(function($sale) use ($status) {
+            $sales = $sales->filter(function ($sale) use ($status) {
                 $total_qty = $sale->details->sum('qty');
                 $total_delivered = $sale->details->sum('delivered_qty');
                 $delivery_status = 'pending';
@@ -52,6 +52,7 @@ class SaleController extends Controller
                 } elseif ($total_delivered > 0) {
                     $delivery_status = 'partial';
                 }
+
                 return $delivery_status == $status;
             });
         }
@@ -66,7 +67,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $products = products::active()->finished()->get();
+        $products = products::active()->ready()->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
 
@@ -185,7 +186,7 @@ class SaleController extends Controller
 
     public function edit(sale $sale)
     {
-        $products = products::orderby('name', 'asc')->get();
+        $products = products::active()->ready()->orderby('name', 'asc')->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
 
@@ -261,7 +262,7 @@ class SaleController extends Controller
                             'date' => $request->date,
                             'refID' => $ref,
                         ]);
-                        createStock($id, 'App\\Models\\products', 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
+                        createStock($id, 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
                     }
                 }
             }
@@ -353,14 +354,14 @@ class SaleController extends Controller
         $accounts = accounts::active()->business()->get();
         $paid_amount = $sale->payments->sum('amount');
         $balance = $sale->total_bill - $paid_amount;
-        
+
         return view('sale.deliver', compact('sale', 'accounts', 'balance'));
     }
 
     public function storeDelivery(Request $request, $id)
     {
         $sale = sale::find($id);
-        
+
         // Handle delivery
         $deliver_now = $request->input('deliver_now', []);
         if (is_array($deliver_now) && count($deliver_now) > 0) {
@@ -371,7 +372,7 @@ class SaleController extends Controller
                     if ($saleDetail) {
                         $new_delivered_qty = $saleDetail->delivered_qty + $qty;
                         $saleDetail->update(['delivered_qty' => $new_delivered_qty]);
-                        
+
                         SaleDelivery::create([
                             'sale_id' => $sale->id,
                             'product_id' => $product_id,
@@ -379,14 +380,14 @@ class SaleController extends Controller
                             'date' => $request->date,
                             'refID' => $ref,
                         ]);
-                        
+
                         // Deduct from stock
-                        createStock($product_id, 0, $qty, $request->date, "Delivered in Sale # $sale->id" . ($request->notes ? " Notes: " . $request->notes : ""), $ref);
+                        createStock($product_id, 0, $qty, $request->date, "Delivered in Sale # $sale->id".($request->notes ? ' Notes: '.$request->notes : ''), $ref);
                     }
                 }
             }
         }
-        
+
         // Handle payments
         if ($request->has('account_id') && $request->has('payment_amount')) {
             $ref = getRef();
@@ -411,7 +412,7 @@ class SaleController extends Controller
                 }
             }
         }
-        
+
         return redirect()->route('sale.index')->with('success', 'Delivery and payment updated successfully.');
     }
 }

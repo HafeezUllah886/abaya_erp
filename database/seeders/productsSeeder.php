@@ -15,15 +15,15 @@ class productsSeeder extends Seeder
         products::create([
             'name' => 'Black Nida Fabric',
             'unit' => 'meter',
-            'price' => 500,
+            'price' => 5,
             'type' => 'Raw Material',
         ]);
 
         products::create([
             'name' => 'Classic Black Abaya',
             'sku' => 'AB-BLK-01',
-            'price' => 5000,
-            'type' => 'Finished Abaya',
+            'price' => 200,
+            'type' => 'Ready Made',
         ]);
     }
 }

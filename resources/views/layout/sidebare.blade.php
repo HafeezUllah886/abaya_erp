@@ -212,8 +212,8 @@
                  <ul class="main-menu {{ $activeMenu == 'productPage' ? 'active' : '' }}" id="productPage"
                      style="display: {{ $activeMenu == 'productPage' ? 'block' : 'none' }};">
                      <li class="no-sub {{ $routeName == 'products.index' ? 'active' : '' }}"><a
-                             href="{{ route('products.index', ['type' => 'Finished Abaya']) }}"
-                             class="{{ request('type') == 'Finished Abaya' ? 'active' : '' }}">Finished Abayas</a>
+                             href="{{ route('products.index', ['type' => 'Ready Made']) }}"
+                             class="{{ request('type') == 'Ready Made' ? 'active' : '' }}">Ready Made Abayas</a>
                      </li>
 
 

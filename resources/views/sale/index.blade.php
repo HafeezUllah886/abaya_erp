@@ -101,8 +101,6 @@
         </div>
         <!-- Default Datatable end -->
 
-
-
     </div>
     <!-- Default Modals -->
 
@@ -128,7 +126,8 @@
             <select class="form-control" name="customer" id="customer">
                 <option value="all">All Customers</option>
                 @foreach ($customers as $cust)
-                    <option value="{{ $cust->id }}" {{ (isset($customer) && $customer == $cust->id) ? 'selected' : '' }}>
+                    <option value="{{ $cust->id }}"
+                        {{ isset($customer) && $customer == $cust->id ? 'selected' : '' }}>
                         {{ $cust->title }}</option>
                 @endforeach
             </select>
@@ -139,10 +138,11 @@
             <span class="input-group-text"><i class="ti ti-truck"></i></span>
             <label for="status" class="form-label" style="display: none;">Status</label>
             <select class="form-control" name="status" id="status">
-                <option value="all" {{ (isset($status) && $status == 'all') ? 'selected' : '' }}>All Statuses</option>
-                <option value="pending" {{ (isset($status) && $status == 'pending') ? 'selected' : '' }}>Pending</option>
-                <option value="partial" {{ (isset($status) && $status == 'partial') ? 'selected' : '' }}>Partial</option>
-                <option value="delivered" {{ (isset($status) && $status == 'delivered') ? 'selected' : '' }}>Delivered</option>
+                <option value="all" {{ isset($status) && $status == 'all' ? 'selected' : '' }}>All Statuses</option>
+                <option value="pending" {{ isset($status) && $status == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="partial" {{ isset($status) && $status == 'partial' ? 'selected' : '' }}>Partial</option>
+                <option value="delivered" {{ isset($status) && $status == 'delivered' ? 'selected' : '' }}>Delivered
+                </option>
             </select>
         </div>
     </div>

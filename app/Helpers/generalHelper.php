@@ -117,9 +117,9 @@ function stockValue()
         $value += itemStockValue($item->id, 'Raw Material');
     }
 
-    $products = products::Finished()->get();
+    $products = products::ready()->get();
     foreach ($products as $item) {
-        $value += itemStockValue($item->id, 'Finished Abaya');
+        $value += itemStockValue($item->id, 'Ready Made');
     }
 
     return $value;
@@ -127,13 +127,13 @@ function stockValue()
 
 function itemStockValue($id, $type)
 {
-    $stock = getStock($id, 'App\Models\products');
+    $stock = getStock($id);
 
     $price = 0;
     if ($type === 'Raw Material') {
         $price = avgPurchasePrice('all', 'all', $id);
-    } elseif ($type === 'Finished Abaya') {
-        $price = avgManufacturingCost('all', 'all', $id);
+    } elseif ($type === 'Ready Made') {
+        $price = products::find($id)->price;
     }
 
     return $price * $stock;

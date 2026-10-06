@@ -18,7 +18,7 @@
                                 <tr>
                                     <th width="10px">#</th>
                                     <th class="text-start">Item</th>
-                                    @if ($type == 'Finished Abaya')
+                                    @if ($type == 'Ready Made')
                                         <th>SKU</th>
                                     @else
                                         <th>Unit</th>
@@ -35,7 +35,7 @@
                                     <tr>
                                         <td class="text-dark">{{ $key + 1 }}</td>
                                         <td class="text-start">{{ $item->name }}</td>
-                                        @if ($type == 'Finished Abaya')
+                                        @if ($type == 'Ready Made')
                                             <td>{{ $item->sku }}</td>
                                         @else
                                             <td>{{ $item->unit }}</td>
@@ -80,7 +80,7 @@
                                                                     class="form-control">
                                                             </div>
 
-                                                            @if ($type == 'Finished Abaya')
+                                                            @if ($type == 'Ready Made')
                                                                 <div class="form-group mt-2">
                                                                     <label for="sku">SKU</label>
                                                                     <input type="text" name="sku" required
@@ -227,7 +227,7 @@
                             <input type="text" name="name" required id="name" class="form-control">
                         </div>
 
-                        @if ($type == 'Finished Abaya')
+                        @if ($type == 'Ready Made')
                             <div class="form-group mt-2">
                                 <label for="sku">SKU</label>
                                 <input type="text" name="sku" required id="sku" class="form-control">

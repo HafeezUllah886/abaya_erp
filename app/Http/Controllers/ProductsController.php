@@ -12,10 +12,10 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        $type = $request->type ?? 'Finished Abaya';
+        $type = $request->type ?? 'Ready Made';
 
-        if ($type == 'Finished Abaya') {
-            $items = products::active()->finished()->get();
+        if ($type == 'Ready Made') {
+            $items = products::active()->ready()->get();
         } else {
             $items = products::active()->rawMaterial()->get();
         }

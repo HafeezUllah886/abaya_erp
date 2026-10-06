@@ -13,11 +13,11 @@ class StockController extends Controller
      */
     public function index(Request $request)
     {
-        $type = $request->type ?? 'Finished Abaya Stock';
+        $type = $request->type ?? 'Ready Made Stock';
 
-        if ($type == 'Finished Abaya Stock') {
-            $products = products::active()->finished()->get();
-            $type = 'Finished Abaya';
+        if ($type == 'Ready Made Stock') {
+            $products = products::active()->ready()->get();
+            $type = 'Ready Made';
         } else {
             $products = products::active()->rawMaterial()->get();
             $type = 'Raw Material';

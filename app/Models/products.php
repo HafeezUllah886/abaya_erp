@@ -16,9 +16,9 @@ class products extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeFinished($query)
+    public function scopeReady($query)
     {
-        return $query->where('type', 'Finished Abaya');
+        return $query->where('type', 'Ready Made');
     }
 
     public function scopeRawMaterial($query)
