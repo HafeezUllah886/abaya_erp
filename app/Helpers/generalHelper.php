@@ -157,10 +157,10 @@ function projectNameShort()
 
 function addressLineOne()
 {
-    return 'ABC Road';
+    return 'M3 Mall, Shop No. 4';
 }
 
 function addressLineTwo()
 {
-    return 'Quetta';
+    return 'Dubai UAE';
 }
