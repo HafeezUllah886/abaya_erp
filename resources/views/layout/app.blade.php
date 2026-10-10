@@ -91,6 +91,19 @@
                         </div>
                         <div class="col-6 head-right">
                             <ul class="d-flex gap-2 align-items-center justify-content-end">
+                                <li class="dropdown">
+                                    <span class="h-40 w-40 d-flex-center b-r-50 head-icon cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti ti-search"></i>
+                                    </span>
+                                    <div class="dropdown-menu p-2 dropdown-menu-end" style="width: 250px;">
+                                        <form action="{{ route('sale.index') }}" method="GET" class="mb-0">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" name="search" class="form-control" placeholder="Search sales..." value="{{ request('search') }}">
+                                                <button class="btn btn-primary" type="submit"><i class="ti ti-search"></i></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li>
                                 <li class="head-maximize-screen">
                                     <span class="h-40 w-40 d-flex-center b-r-50 head-icon">
                                         <i class="ti ti-arrows-maximize"></i>

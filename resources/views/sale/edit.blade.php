@@ -21,6 +21,14 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
+                            <div class="col-3">
+                                <select name="sale_type" id="sale_type" class="form-select mb-3">
+                                    <option value="order" {{ $sale->sale_type == 'order' ? 'selected' : '' }}>Order</option>
+                                    <option value="RD" {{ $sale->sale_type == 'RD' ? 'selected' : '' }}>RD</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="product">Product</label>
@@ -53,22 +61,21 @@
                                                 <td class="p-1">{{ $item->product->name }}</td>
                                                 <td class="p-0"><input type="number" name="price[]" step="any"
                                                         value="{{ $item->price }}" min="0"
-                                                        class="form-control form-control-sm text-center p-1"
-                                                        id="price_{{ $product_id }}"
-                                                        oninput="updateChanges({{ $product_id }})"></td>
+                                                        class="form-control form-control-sm text-center p-1 price"
+                                                        id="price_{{ $product_id }}"></td>
                                                 <td class="p-0"><input type="number" name="qty[]"
-                                                        oninput="updateChanges({{ $product_id }})" min="0"
+                                                        min="0"
                                                         step="any" value="{{ $item->qty }}"
-                                                        class="form-control form-control-sm text-center p-1"
+                                                        class="form-control form-control-sm text-center p-1 qty"
                                                         id="qty_{{ $product_id }}"></td>
                                                 <td class="p-0"><input type="number" name="delivered_qty[]"
                                                         min="0" step="any"
                                                         value="{{ $item->delivered_qty ?? 0 }}"
-                                                        class="form-control form-control-sm text-center p-1"
-                                                        id="delivered_qty_{{ $product_id }}"></td>
+                                                        class="form-control form-control-sm text-center p-1 delivered_qty"
+                                                        id="delivered_qty_{{ $product_id }}" {{ $sale->sale_type == 'RD' ? 'readonly' : '' }}></td>
                                                 <td class="p-0"><input type="number" name="amount[]" min="0.1"
                                                         readonly required step="any" value="{{ $item->amount }}"
-                                                        class="form-control form-control-sm text-center p-1"
+                                                        class="form-control form-control-sm text-center p-1 amount"
                                                         id="amount_{{ $product_id }}"></td>
                                                 <td class="p-0"> <span class="btn btn-sm btn-danger"
                                                         onclick="deleteRow({{ $product_id }})">X</span> </td>
@@ -254,20 +261,19 @@
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +
-                            '" min="0" class="form-control form-control-sm text-center p-1" id="price_' + id +
-                            '" oninput="updateChanges(' +
-                            id +
-                            ')"></td>';
+                            '" min="0" class="form-control form-control-sm text-center p-1 price" id="price_' + id +
+                            '"></td>';
                         html +=
-                            '<td class="p-0"><input type="number" name="qty[]" min="0.1" oninput="updateChanges(' +
-                            id +
-                            ')" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="qty_' +
+                            '<td class="p-0"><input type="number" name="qty[]" min="0.1" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1 qty" id="qty_' +
+                            id + '"></td>';
+                        
+                        let type = $('#sale_type').val();
+                        let readOnlyAttr = type == 'RD' ? 'readonly' : '';
+                        html +=
+                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" ' + readOnlyAttr + ' class="form-control form-control-sm text-center p-1 delivered_qty" id="delivered_qty_' +
                             id + '"></td>';
                         html +=
-                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1" id="delivered_qty_' +
-                            id + '"></td>';
-                        html +=
-                            '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1" id="amount_' +
+                            '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1 amount" id="amount_' +
                             id + '"></td>';
                         html += '<td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow(' +
                             id + ')">X</span> </td>';
@@ -275,26 +281,60 @@
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
-                        updateChanges(id);
+                        
+                        // Set initial amount based on qty and price
+                        let newRow = $('#row_' + id);
+                        updateRowAmount(newRow);
                     }
                 }
             });
         }
 
-        function updateChanges(id) {
-            var qty = parseFloat($("#qty_" + id).val());
-            var price = parseFloat($("#price_" + id).val());
-            var amount = qty * price;
-            $("#amount_" + id).val(amount.toFixed(2));
+        $('#sale_type').on('change', function() {
+            let type = $(this).val();
+            
+            $('#products_table tbody tr').each(function() {
+                let row = $(this);
+                let qty = row.find('.qty').val();
+                let deliveredQty = row.find('.delivered_qty');
+                
+                if (type == 'RD') {
+                    deliveredQty.prop('readonly', true);
+                    deliveredQty.val(qty);
+                } else {
+                    deliveredQty.prop('readonly', false);
+                }
+            });
+        });
+
+        $(document).on('input', '.qty', function() {
+            let row = $(this).closest('tr');
+            let type = $('#sale_type').val();
+            let qty = $(this).val();
+
+            if (type == 'RD') {
+                row.find('.delivered_qty').val(qty);
+            }
+            updateRowAmount(row);
+        });
+
+        $(document).on('input', '.price', function() {
+            let row = $(this).closest('tr');
+            updateRowAmount(row);
+        });
+
+        function updateRowAmount(row) {
+            let qty = parseFloat(row.find('.qty').val()) || 0;
+            let price = parseFloat(row.find('.price').val()) || 0;
+            row.find('.amount').val((qty * price).toFixed(2));
             updateTotal();
         }
 
         function updateTotal() {
             var total = 0;
-            $("input[id^='amount_']").each(function() {
-                var inputId = $(this).attr('id');
+            $(".amount").each(function() {
                 var inputValue = $(this).val();
-                total += parseFloat(inputValue);
+                total += parseFloat(inputValue) || 0;
             });
 
             $("#totalAmount").html(total.toFixed(2));

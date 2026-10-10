@@ -34,10 +34,24 @@ class SaleController extends Controller
         $to = $request->to ?? lastDayOfMonth();
         $customer = $request->customer ?? 'all';
         $status = $request->status ?? 'all';
+        $search = $request->search;
 
-        $sales = sale::whereBetween('date', [$from, $to])
+        $sales = sale::when(!$search, function ($query) use ($from, $to) {
+                $query->whereBetween('date', [$from, $to]);
+            })
             ->when($customer != 'all', function ($query) use ($customer) {
                 $query->where('customer_id', $customer);
+            })
+            ->when($search, function ($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('id', $search)
+                      ->orWhere('customer_name', 'like', "%{$search}%")
+                      ->orWhere('contact', 'like', "%{$search}%")
+                      ->orWhereHas('customer', function ($q2) use ($search) {
+                          $q2->where('title', 'like', "%{$search}%")
+                             ->orWhere('contact', 'like', "%{$search}%");
+                      });
+                });
             })
             ->orderby('id', 'desc')
             ->get();
