@@ -13,9 +13,7 @@
     <meta content="la-themes" name="author">
     <link href="{{ asset('assets/images/logo/favicon.png') }}" rel="icon" type="image/x-icon">
     <link href="{{ asset('assets/images/logo/favicon.png') }}" rel="shortcut icon" type="image/x-icon">
-
-    <title>Password Confirmation | Smart Gas Station by Nexgen Pakistan</title>
-
+    <title>Password Confirmation | Nexgen Pakistan</title>
     <!--font-awesome-css-->
     <link href="{{ asset('assets/vendor/fontawesome/css/all.css') }}" rel="stylesheet">
 
@@ -93,7 +91,7 @@
     <!-- Bootstrap js-->
     <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
 
-     @if (Session::get('success'))
+    @if (Session::get('success'))
         <script>
             Toastify({
                 text: "{{ Session::get('success') }}",

@@ -91,6 +91,7 @@ class SaleController extends Controller
                     'customer_id' => $request->customer_id,
                     'customer_name' => $request->customer_name,
                     'contact' => $request->contact,
+                    'sale_type' => $request->sale_type,
                     'date' => $request->date,
                     'delivery_date' => $request->delivery_date,
                     'notes' => $request->notes,
@@ -109,6 +110,11 @@ class SaleController extends Controller
                     $price = $request->price[$key];
                     $amount = $request->amount[$key];
                     $delivered_qty = $request->delivered_qty[$key] ?? 0;
+                    
+                    if ($request->sale_type == 'RD') {
+                        $delivered_qty = $qty;
+                    }
+
                     $total += $amount;
 
                     sale_details::create(
@@ -132,7 +138,10 @@ class SaleController extends Controller
                             'date' => $request->date,
                             'refID' => $ref,
                         ]);
-                        createStock($id, 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
+                        
+                        if ($request->sale_type == 'RD') {
+                            createStock($id, 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
+                        }
                     }
                 }
             }
@@ -149,7 +158,6 @@ class SaleController extends Controller
                 if ($payment_amount[$key] > 0) {
                     $account = accounts::find($account_id);
                     createTransaction($account->id, $request->date, $payment_amount[$key], 0, "Payment of Sale # $sale->id Remarks".$payment_notes[$key], $ref);
-
                     salePayments::create(
                         [
                             'sale_id' => $sale->id,

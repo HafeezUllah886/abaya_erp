@@ -25,6 +25,8 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
+                                    <th>Type</th>
+                                    <th>Model</th>
                                     <th>Order Qty</th>
                                     <th>Received Qty</th>
                                 </tr>
@@ -33,6 +35,8 @@
                                 @foreach ($order->products as $p)
                                     <tr>
                                         <td>{{ $p->product_id }}</td>
+                                        <td>{{ $p->type }}</td>
+                                        <td>{{ $p->model }}</td>
                                         <td>{{ $p->order_qty }}</td>
                                         <td>{{ $p->received_qty }}</td>
                                     </tr>

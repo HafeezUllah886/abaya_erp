@@ -56,43 +56,77 @@
                             <table class="table table-bordered" id="products_table">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Order Qty</th>
-                                        <th>Received Qty</th>
-                                        <th><button type="button" class="btn btn-sm btn-success"
+                                        <th class="p-1">Product</th>
+                                        <th class="p-1">Type</th>
+                                        <th class="p-1">Model</th>
+                                        <th class="p-1">Order Qty</th>
+                                        <th class="p-1">Received Qty</th>
+                                        <th class="p-1"><button type="button" class="btn btn-sm btn-success"
                                                 id="add_product">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($order->products->count() > 0)
-                                        @foreach($order->products as $op)
+                                    @if ($order->products->count() > 0)
+                                        @foreach ($order->products as $op)
                                             <tr>
-                                                <td>
+                                                <td class="p-1">
                                                     <select name="product_id[]" class="form-control">
                                                         <option value="">Select Product</option>
                                                         @foreach ($finished_products as $p)
-                                                            <option value="{{ $p->id }}" {{ $op->product_id == $p->id ? 'selected' : '' }}>{{ $p->title ?? $p->name }}</option>
+                                                            <option value="{{ $p->id }}"
+                                                                {{ $op->product_id == $p->id ? 'selected' : '' }}>
+                                                                {{ $p->title ?? $p->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td><input type="number" name="order_qty[]" class="form-control" step="0.01" value="{{ $op->order_qty }}"></td>
-                                                <td><input type="number" name="received_qty[]" class="form-control" step="0.01" value="{{ $op->received_qty }}"></td>
-                                                <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
+                                                <td class="p-1">
+                                                    <select name="type[]" class="form-control">
+                                                        <option value="Order"
+                                                            {{ $op->type == 'Order' ? 'selected' : '' }}>Order</option>
+                                                        <option value="RD" {{ $op->type == 'RD' ? 'selected' : '' }}>RD
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td class="p-1">
+                                                    <input type="text" name="model[]" class="form-control"
+                                                        value="{{ $op->model }}">
+                                                </td>
+                                                <td class="p-1"><input type="number" name="order_qty[]"
+                                                        class="form-control" step="0.01" value="{{ $op->order_qty }}">
+                                                </td>
+                                                <td class="p-1"><input type="number" name="received_qty[]"
+                                                        class="form-control" step="0.01"
+                                                        value="{{ $op->received_qty }}"></td>
+                                                <td class="p-1"><button type="button"
+                                                        class="btn btn-sm btn-danger remove_row">-</button></td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td>
+                                            <td class="p-1">
                                                 <select name="product_id[]" class="form-control">
                                                     <option value="">Select Product</option>
                                                     @foreach ($finished_products as $p)
-                                                        <option value="{{ $p->id }}">{{ $p->title ?? $p->name }}</option>
+                                                        <option value="{{ $p->id }}">{{ $p->title ?? $p->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="number" name="order_qty[]" class="form-control" step="0.01" value="0"></td>
-                                            <td><input type="number" name="received_qty[]" class="form-control" step="0.01" value="0"></td>
-                                            <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
+                                            <td class="p-1">
+                                                <select name="type[]" class="form-control">
+                                                    <option value="Order">Order</option>
+                                                    <option value="RD">RD</option>
+                                                </select>
+                                            </td>
+                                            <td class="p-1">
+                                                <input type="text" name="model[]" class="form-control">
+                                            </td>
+                                            <td class="p-1"><input type="number" name="order_qty[]" class="form-control"
+                                                    step="0.01" value="0"></td>
+                                            <td class="p-1"><input type="number" name="received_qty[]"
+                                                    class="form-control" step="0.01" value="0"></td>
+                                            <td class="p-1"><button type="button"
+                                                    class="btn btn-sm btn-danger remove_row">-</button></td>
                                         </tr>
                                     @endif
                                 </tbody>
@@ -103,32 +137,44 @@
                             <table class="table table-bordered" id="materials_table">
                                 <thead>
                                     <tr>
-                                        <th>Material</th>
-                                        <th>Own Qty</th>
-                                        <th>Customer Qty</th>
-                                        <th>Est. Cost Price (Unit)</th>
-                                        <th>Total Cost</th>
-                                        <th><button type="button" class="btn btn-sm btn-success"
+                                        <th class="p-1">Material</th>
+                                        <th class="p-1">Own Qty</th>
+                                        <th class="p-1">Customer Qty</th>
+                                        <th class="p-1">Est. Cost Price (Unit)</th>
+                                        <th class="p-1">Total Cost</th>
+                                        <th class="p-1"><button type="button" class="btn btn-sm btn-success"
                                                 id="add_material">+</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($order->materials->count() > 0)
-                                        @foreach($order->materials as $om)
+                                    @if ($order->materials->count() > 0)
+                                        @foreach ($order->materials as $om)
                                             <tr>
-                                                <td>
+                                                <td class="p-1">
                                                     <select name="material_id[]" class="form-control material_select">
                                                         <option value="">Select Material</option>
                                                         @foreach ($raw_materials as $rm)
-                                                            <option value="{{ $rm->id }}" data-price="{{ avgPurchasePrice('all', 'all', $rm->id) }}" {{ $om->product_id == $rm->id ? 'selected' : '' }}>{{ $rm->title ?? $rm->name }}</option>
+                                                            <option value="{{ $rm->id }}"
+                                                                data-price="{{ avgPurchasePrice('all', 'all', $rm->id) }}"
+                                                                {{ $om->product_id == $rm->id ? 'selected' : '' }}>
+                                                                {{ $rm->title ?? $rm->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td><input type="number" name="own_qty[]" class="form-control own_qty" step="0.01" value="{{ $om->own_qty }}"></td>
-                                                <td><input type="number" name="customer_qty[]" class="form-control" step="0.01" value="{{ $om->customer_qty }}"></td>
-                                                <td><input type="number" name="cost_price[]" class="form-control cost_price" step="0.01" value="{{ $om->cost_price }}"></td>
-                                                <td><input type="number" class="form-control total_cost" value="{{ number_format($om->own_qty * $om->cost_price, 2, '.', '') }}" readonly></td>
-                                                <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
+                                                <td class="p-1"><input type="number" name="own_qty[]"
+                                                        class="form-control own_qty" step="0.01"
+                                                        value="{{ $om->own_qty }}"></td>
+                                                <td class="p-1"><input type="number" name="customer_qty[]"
+                                                        class="form-control" step="0.01"
+                                                        value="{{ $om->customer_qty }}"></td>
+                                                <td class="p-1"><input type="number" name="cost_price[]"
+                                                        class="form-control cost_price" step="0.01"
+                                                        value="{{ $om->cost_price }}"></td>
+                                                <td class="p-1"><input type="number" class="form-control total_cost"
+                                                        value="{{ number_format($om->own_qty * $om->cost_price, 2, '.', '') }}"
+                                                        readonly></td>
+                                                <td class="p-1"><button type="button"
+                                                        class="btn btn-sm btn-danger remove_row">-</button></td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -137,15 +183,21 @@
                                                 <select name="material_id[]" class="form-control material_select">
                                                     <option value="">Select Material</option>
                                                     @foreach ($raw_materials as $rm)
-                                                        <option value="{{ $rm->id }}" data-price="{{ avgPurchasePrice('all', 'all', $rm->id) }}">{{ $rm->title ?? $rm->name }}</option>
+                                                        <option value="{{ $rm->id }}"
+                                                            data-price="{{ avgPurchasePrice('all', 'all', $rm->id) }}">
+                                                            {{ $rm->title ?? $rm->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="number" name="own_qty[]" class="form-control own_qty" step="0.01" value="0"></td>
-                                            <td><input type="number" name="customer_qty[]" class="form-control" step="0.01" value="0"></td>
-                                            <td><input type="number" name="cost_price[]" class="form-control cost_price" step="0.01"></td>
+                                            <td><input type="number" name="own_qty[]" class="form-control own_qty"
+                                                    step="0.01" value="0"></td>
+                                            <td><input type="number" name="customer_qty[]" class="form-control"
+                                                    step="0.01" value="0"></td>
+                                            <td><input type="number" name="cost_price[]" class="form-control cost_price"
+                                                    step="0.01"></td>
                                             <td><input type="number" class="form-control total_cost" readonly></td>
-                                            <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
+                                            <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button>
+                                            </td>
                                         </tr>
                                     @endif
                                 </tbody>
@@ -186,7 +238,7 @@
             // Add Product Row
             $('#add_product').click(function() {
                 var row = `<tr>
-                <td>
+                <td class="p-1">
                     <select name="product_id[]" class="form-control">
                         <option value="">Select Product</option>
                         @foreach ($finished_products as $p)
@@ -194,9 +246,18 @@
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="order_qty[]" class="form-control" step="0.01" value="0"></td>
-                <td><input type="number" name="received_qty[]" class="form-control" step="0.01" value="0"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
+                <td class="p-1">
+                    <select name="type[]" class="form-control">
+                        <option value="Order">Order</option>
+                        <option value="RD">RD</option>
+                    </select>
+                </td>
+                <td class="p-1">
+                    <input type="text" name="model[]" class="form-control">
+                </td>
+                <td class="p-1"><input type="number" name="order_qty[]" class="form-control" step="0.01" value="0"></td>
+                <td class="p-1"><input type="number" name="received_qty[]" class="form-control" step="0.01" value="0"></td>
+                <td class="p-1"><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
             </tr>`;
                 $('#products_table tbody').append(row);
             });
@@ -249,7 +310,7 @@
                 });
                 $('#grand_total').text(grandTotal.toFixed(2));
             }
-            
+
             // Calculate initially
             calculateTotal();
         });

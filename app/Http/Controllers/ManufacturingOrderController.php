@@ -74,16 +74,20 @@ class ManufacturingOrderController extends Controller
             foreach ($request->product_id as $key => $product_id) {
                 $order_qty = $request->order_qty[$key] ?? 0;
                 $received_qty = $request->received_qty[$key] ?? 0;
+                $type = $request->type[$key] ?? 'Order';
+                $model = $request->model[$key] ?? null;
 
                 if ($order_qty > 0 || $received_qty > 0) {
                     ManufacturingOrderProduct::create([
                         'manufacturing_order_id' => $order->id,
                         'product_id' => $product_id,
+                        'type' => $type,
+                        'model' => $model,
                         'order_qty' => $order_qty,
                         'received_qty' => $received_qty,
                     ]);
 
-                    if ($received_qty > 0) {
+                    if ($received_qty > 0 && $type == 'RD') {
                         createStock($product_id, $received_qty, 0, $request->date, 'Received from tailor for Mfg Order #'.$order->id, $ref);
                     }
                 }
@@ -180,16 +184,20 @@ class ManufacturingOrderController extends Controller
             foreach ($request->product_id as $key => $product_id) {
                 $order_qty = $request->order_qty[$key] ?? 0;
                 $received_qty = $request->received_qty[$key] ?? 0;
+                $type = $request->type[$key] ?? 'Order';
+                $model = $request->model[$key] ?? null;
 
                 if ($order_qty > 0 || $received_qty > 0) {
                     ManufacturingOrderProduct::create([
                         'manufacturing_order_id' => $order->id,
                         'product_id' => $product_id,
+                        'type' => $type,
+                        'model' => $model,
                         'order_qty' => $order_qty,
                         'received_qty' => $received_qty,
                     ]);
 
-                    if ($received_qty > 0) {
+                    if ($received_qty > 0 && $type == 'RD') {
                         createStock($product_id, $received_qty, 0, $request->date, 'Received from tailor for Mfg Order #'.$order->id, $ref);
                     }
                 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->nullable()->constrained('accounts');
             $table->date('date');
+            $table->enum('sale_type', ['order', 'RD'])->default('order');
             $table->float('total')->default(0);
             $table->text('notes')->nullable();
             $table->date('delivery_date')->nullable();

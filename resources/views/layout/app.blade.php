@@ -202,7 +202,7 @@
                 text: "{{ session('error') }}",
                 className: "info",
                 style: {
-                    background: "linear-gradient(to right, #00b09b, #2cc76f)",
+                    background: "linear-gradient(to right, #ff4b2b, #ff416c)",
                 }
             }).showToast();
         @endif

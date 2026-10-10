@@ -8,40 +8,53 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ route('sale.store') }}" method="post" id="saleForm">
+
                         @csrf
                         <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="product">Product</label>
-                                    <select name="product" class="w-100" id="product">
-                                        <option value=""></option>
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="col-3">
+                                <select name="sale_type" id="sale_type" class="form-select mb-3">
+                                    <option value="order">Order</option>
+                                    <option value="RD">RD</option>
+                                </select>
                             </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered" id="products_table">
+                                <thead>
+                                    <tr>
+                                        <th class="p-1">Product</th>
+                                        <th class="text-center p-1">Price</th>
+                                        <th class="text-center p-1">Qty</th>
+                                        <th class="text-center p-1">Delivered</th>
+                                        <th class="text-end p-1">Amount</th>
+                                        <th class="text-center p-1"><button type="button" class="btn btn-sm btn-success"
+                                                id="add_product">+</button></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products_list">
+                                    <tr>
+                                        <td class="p-1">
+                                            <select name="id[]" class="form-control">
+                                                <option value="">Select Product</option>
+                                                @foreach ($products as $p)
+                                                    <option value="{{ $p->id }}">{{ $p->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
 
-                            <div class="col-12">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <th width="30%">Item</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Qty</th>
-                                        <th class="text-center">Delivered</th>
-                                        <th class="text-end">Amount</th>
-                                        <th></th>
-                                    </thead>
-                                    <tbody id="products_list"></tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="4" class="text-end">Total</th>
-                                            <th class="text-end" id="totalAmount">0.00</th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                                        <td class="p-1"><input type="number" name="price[]" class="form-control price"
+                                                step="0.01" value="0"></td>
+                                        <td class="p-1"><input type="number" name="qty[]" class="form-control qty"
+                                                step="0.01" value="0"></td>
+                                        <td class="p-1"><input type="number" name="delivered_qty[]"
+                                                class="form-control delivered_qty" step="0.01" value="0"></td>
+                                        <td class="p-1"><input type="number" name="amount[]" class="form-control amount"
+                                                step="0.01" value="0" readonly></td>
+                                        <td class="p-1"><button type="button"
+                                                class="btn btn-sm btn-danger remove_row">-</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="date">Date</label>
@@ -110,7 +123,8 @@
                                             <tr>
                                                 <td>{{ $account->title }}</td>
 
-                                                <td><input type="text" name="payment_notes[]" class="form-control"></td>
+                                                <td><input type="text" name="payment_notes[]" class="form-control">
+                                                </td>
                                                 <td><input type="number" name="payment_amount[]"
                                                         id="paymnet_amount_{{ $account->id }}"
                                                         oninput="calculatePayment()" value="0"
@@ -164,6 +178,19 @@
             checkCustomer();
             $("#customer_id").on('change', function() {
                 checkCustomer();
+            });
+
+            $('#add_product').on('click', function() {
+                var newRow = $('#products_table tbody tr:first').clone();
+                newRow.find('input').val(0);
+                newRow.find('select[name="id[]"]').val('');
+                let type = $('#sale_type').val();
+                if (type == 'RD') {
+                    newRow.find('.delivered_qty').prop('readonly', true);
+                } else {
+                    newRow.find('.delivered_qty').prop('readonly', false);
+                }
+                $('#products_table tbody').append(newRow);
             });
         });
 
@@ -233,29 +260,67 @@
             });
         }
 
-        function updateChanges(id) {
-            var qty = parseFloat($("#qty_" + id).val());
-            var price = parseFloat($("#price_" + id).val());
-            var amount = qty * price;
-            $("#amount_" + id).val(amount.toFixed(2));
+        $('#sale_type').on('change', function() {
+            let type = $(this).val();
+            
+            $('#products_table tbody tr').each(function() {
+                let row = $(this);
+                let qty = row.find('.qty').val();
+                let deliveredQty = row.find('.delivered_qty');
+                
+                if (type == 'RD') {
+                    deliveredQty.prop('readonly', true);
+                    deliveredQty.val(qty);
+                } else {
+                    deliveredQty.prop('readonly', false);
+                }
+            });
+        });
+
+        $(document).on('input', '.qty', function() {
+            let row = $(this).closest('tr');
+            let type = $('#sale_type').val();
+            let qty = $(this).val();
+
+            if (type == 'RD') {
+                row.find('.delivered_qty').val(qty);
+            }
+            updateRowAmount(row);
+        });
+
+        $(document).on('input', '.price', function() {
+            let row = $(this).closest('tr');
+            updateRowAmount(row);
+        });
+
+        function updateRowAmount(row) {
+            let qty = parseFloat(row.find('.qty').val()) || 0;
+            let price = parseFloat(row.find('.price').val()) || 0;
+            row.find('.amount').val((qty * price).toFixed(2));
             updateTotal();
         }
 
         function updateTotal() {
             var total = 0;
-            $("input[id^='amount_']").each(function() {
-                var inputId = $(this).attr('id');
+            $(".amount").each(function() {
                 var inputValue = $(this).val();
-                total += parseFloat(inputValue);
+                total += parseFloat(inputValue) || 0;
             });
 
             $("#totalAmount").html(total.toFixed(2));
 
-            var vat = parseFloat($("#vat").val());
+            var vat = parseFloat($("#vat").val()) || 0;
             var vat_amount = total * (vat / 100);
             $("#vat_amount").val(vat_amount.toFixed(2));
             $("#total_bill").val((total + vat_amount).toFixed(2));
         }
+
+        $(document).on('click', '.remove_row', function() {
+            if ($('#products_table tbody tr').length > 1) {
+                $(this).closest('tr').remove();
+                updateTotal();
+            }
+        });
 
         function deleteRow(id) {
             existingProducts = $.grep(existingProducts, function(value) {
