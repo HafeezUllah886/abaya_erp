@@ -36,21 +36,21 @@ class SaleController extends Controller
         $status = $request->status ?? 'all';
         $search = $request->search;
 
-        $sales = sale::when(!$search, function ($query) use ($from, $to) {
-                $query->whereBetween('date', [$from, $to]);
-            })
+        $sales = sale::when(! $search, function ($query) use ($from, $to) {
+            $query->whereBetween('date', [$from, $to]);
+        })
             ->when($customer != 'all', function ($query) use ($customer) {
                 $query->where('customer_id', $customer);
             })
             ->when($search, function ($query) use ($search) {
-                $query->where(function($q) use ($search) {
+                $query->where(function ($q) use ($search) {
                     $q->where('id', $search)
-                      ->orWhere('customer_name', 'like', "%{$search}%")
-                      ->orWhere('contact', 'like', "%{$search}%")
-                      ->orWhereHas('customer', function ($q2) use ($search) {
-                          $q2->where('title', 'like', "%{$search}%")
-                             ->orWhere('contact', 'like', "%{$search}%");
-                      });
+                        ->orWhere('customer_name', 'like', "%{$search}%")
+                        ->orWhere('contact', 'like', "%{$search}%")
+                        ->orWhereHas('customer', function ($q2) use ($search) {
+                            $q2->where('title', 'like', "%{$search}%")
+                                ->orWhere('contact', 'like', "%{$search}%");
+                        });
                 });
             })
             ->orderby('id', 'desc')
@@ -124,7 +124,7 @@ class SaleController extends Controller
                     $price = $request->price[$key];
                     $amount = $request->amount[$key];
                     $delivered_qty = $request->delivered_qty[$key] ?? 0;
-                    
+
                     if ($request->sale_type == 'RD') {
                         $delivered_qty = $qty;
                     }
@@ -152,7 +152,7 @@ class SaleController extends Controller
                             'date' => $request->date,
                             'refID' => $ref,
                         ]);
-                        
+
                         if ($request->sale_type == 'RD') {
                             createStock($id, 0, $delivered_qty, $request->date, "Delivered in Sale # $sale->id", $ref);
                         }
@@ -241,10 +241,10 @@ class SaleController extends Controller
                     'customer_id' => $request->customer_id,
                     'customer_name' => $request->customer_name,
                     'contact' => $request->contact,
+                    'sale_type' => $request->sale_type,
                     'date' => $request->date,
                     'delivery_date' => $request->delivery_date,
                     'notes' => $request->notes,
-                    'status' => $request->status ?? 'paid',
                     'vat' => $request->vat,
                     'vat_amount' => $request->vat_amount,
                     'total_bill' => $request->total_bill,
@@ -261,6 +261,11 @@ class SaleController extends Controller
                     $price = $request->price[$key];
                     $amount = $request->amount[$key];
                     $delivered_qty = $request->delivered_qty[$key] ?? 0;
+
+                    if ($request->sale_type == 'RD') {
+                        $delivered_qty = $qty;
+                    }
+
                     $total += $amount;
 
                     sale_details::create(
@@ -323,7 +328,7 @@ class SaleController extends Controller
             DB::commit();
             session()->forget('confirmed_password');
 
-            return to_route('sale.index')->with('success', 'Sale Updated');
+            return to_route('customer-sales.index')->with('success', 'Sale Updated');
         } catch (Exception $e) {
             DB::rollback();
 

@@ -71,8 +71,8 @@ class AuthController extends Controller
     {
         $availableLinks = [
             'dashboard' => 'Dashboard',
-            'sale.create' => 'Create Sale',
-            'sale.index' => 'Sales History',
+            'customer-sales.create' => 'Customer Sales',
+            'customer-sales.index' => 'Sales History',
             'purchase.create' => 'Create Purchase',
             'purchase.index' => 'Purchase History',
             'manufacturing_orders.create' => 'Create Order',
@@ -97,7 +97,7 @@ class AuthController extends Controller
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|unique:users,username,' . Auth::id(),
+            'username' => 'required|string|unique:users,username,'.Auth::id(),
             'password' => 'nullable|string|min:4',
         ]);
 
@@ -107,6 +107,7 @@ class AuthController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
+
         return back()->with('success', 'Profile updated successfully');
     }
 
@@ -114,8 +115,8 @@ class AuthController extends Controller
     {
         $availableLinks = [
             'dashboard' => 'Dashboard',
-            'sale.create' => 'Create Sale',
-            'sale.index' => 'Sales History',
+            'customer-sales.create' => 'Customer Sales',
+            'customer-sales.index' => 'Sales History',
             'purchase.create' => 'Create Purchase',
             'purchase.index' => 'Purchase History',
             'manufacturing_orders.create' => 'Create Order',

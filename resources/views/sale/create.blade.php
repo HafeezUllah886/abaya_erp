@@ -7,7 +7,7 @@
                     <h5>Create Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('sale.store') }}" method="post" id="saleForm">
+                    <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm">
 
                         @csrf
                         <div class="row">
@@ -262,12 +262,12 @@
 
         $('#sale_type').on('change', function() {
             let type = $(this).val();
-            
+
             $('#products_table tbody tr').each(function() {
                 let row = $(this);
                 let qty = row.find('.qty').val();
                 let deliveredQty = row.find('.delivered_qty');
-                
+
                 if (type == 'RD') {
                     deliveredQty.prop('readonly', true);
                     deliveredQty.val(qty);

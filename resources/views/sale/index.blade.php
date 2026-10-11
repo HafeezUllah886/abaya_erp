@@ -70,10 +70,10 @@
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li><a class="dropdown-item"
-                                                            href="{{ route('sale.show', $sale->id) }}"><i
+                                                            href="{{ route('customer-sales.show', $sale->id) }}"><i
                                                                 class="ti ti-eye me-2 text-secondary"></i> View</a></li>
                                                     <li><a class="dropdown-item"
-                                                            href="{{ route('sale.edit', $sale->id) }}"><i
+                                                            href="{{ route('customer-sales.edit', $sale->id) }}"><i
                                                                 class="ti ti-edit me-2 text-secondary"></i> Edit</a></li>
                                                     @if ($total_qty > $total_delivered || $balance > 0)
                                                         <li><a class="dropdown-item"

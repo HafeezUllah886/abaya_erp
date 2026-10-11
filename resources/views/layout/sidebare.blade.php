@@ -31,7 +31,9 @@
                  ])
              ) {
                  $activeMenu = 'productPage';
-             } elseif (\Illuminate\Support\Str::startsWith($routeName, ['sale', 'shift', 'orders', 'fulfillments'])) {
+             } elseif (
+                 \Illuminate\Support\Str::startsWith($routeName, ['customer-sales', 'shift', 'orders', 'fulfillments'])
+             ) {
                  $activeMenu = 'salePage';
              } elseif (\Illuminate\Support\Str::startsWith($routeName, ['purchase'])) {
                  $activeMenu = 'purchasePage';
@@ -50,7 +52,7 @@
                      <i class="ti ti-smart-home"></i>
                  </a>
              </li>
-             <li class="nav-item" title="Sale">
+             <li class="nav-item" title="Customer Sales">
                  <a href="#" class="nav-link {{ $activeMenu == 'salePage' ? 'active' : '' }}"
                      data-target="salePage">
                      <i class="ti ti-shopping-cart"></i>
@@ -119,12 +121,12 @@
 
              <div class="main-side-menu">
                  <!-- Bookmarks Menu (Visible globally if user has bookmarks) -->
-                 @if(auth()->check() && is_array(auth()->user()->bookmarks) && count(auth()->user()->bookmarks) > 0)
+                 @if (auth()->check() && is_array(auth()->user()->bookmarks) && count(auth()->user()->bookmarks) > 0)
                      @php
                          $availableLinks = [
                              'dashboard' => 'Dashboard',
-                             'sale.create' => 'Create Sale',
-                             'sale.index' => 'Sales History',
+                             'customer-sales.create' => 'Customer Sale',
+                             'customer-sales.index' => 'Sales History',
                              'purchase.create' => 'Create Purchase',
                              'purchase.index' => 'Purchase History',
                              'manufacturing_orders.create' => 'Create Order',
@@ -144,11 +146,13 @@
                          ];
                      @endphp
                      <ul class="bookmarks-menu list-unstyled mb-3" style="display: block;">
-                         <li class="nav-label text-uppercase text-primary f-w-700 f-s-11 mb-2 mt-3 px-3">Bookmarked Links</li>
-                         @foreach(auth()->user()->bookmarks as $bRoute)
-                             @if(isset($availableLinks[$bRoute]) && Route::has($bRoute))
+                         <li class="nav-label text-uppercase text-primary f-w-700 f-s-11 mb-2 mt-3 px-3">Bookmarked
+                             Links</li>
+                         @foreach (auth()->user()->bookmarks as $bRoute)
+                             @if (isset($availableLinks[$bRoute]) && Route::has($bRoute))
                                  <li class="no-sub {{ $routeName == $bRoute ? 'active' : '' }}">
-                                     <a href="{{ route($bRoute) }}" class="{{ $routeName == $bRoute ? 'active' : '' }} d-flex align-items-center py-2 px-3 text-dark text-decoration-none action-hover">
+                                     <a href="{{ route($bRoute) }}"
+                                         class="{{ $routeName == $bRoute ? 'active' : '' }} d-flex align-items-center py-2 px-3 text-dark text-decoration-none action-hover">
                                          <i class="ti ti-bookmark me-2 text-primary f-s-14"></i>
                                          {{ $availableLinks[$bRoute] }}
                                      </a>
@@ -158,7 +162,7 @@
                          <li class="border-bottom my-2"></li>
                      </ul>
                  @endif
-                 
+
                  <!-- Home -->
                  <ul class="main-menu {{ $activeMenu == 'homePage' ? 'active' : '' }}" id="homePage"
                      style="display: {{ $activeMenu == 'homePage' ? 'block' : 'none' }};">
@@ -172,12 +176,13 @@
                  <!-- Sale -->
                  <ul class="main-menu {{ $activeMenu == 'salePage' ? 'active' : '' }}" id="salePage"
                      style="display: {{ $activeMenu == 'salePage' ? 'block' : 'none' }};">
-                     <li class="no-sub {{ $routeName == 'sale.create' ? 'active' : '' }}"><a
-                             href="{{ route('sale.create') }}"
-                             class="{{ $routeName == 'sale.create' ? 'active' : '' }}">Create Sale</a></li>
-                     <li class="no-sub {{ $routeName == 'sale.index' ? 'active' : '' }}"><a
-                             href="{{ route('sale.index') }}"
-                             class="{{ $routeName == 'sale.index' ? 'active' : '' }}">Sales History</a></li>
+                     <li class="no-sub {{ $routeName == 'customer-sales.create' ? 'active' : '' }}"><a
+                             href="{{ route('customer-sales.create') }}"
+                             class="{{ $routeName == 'customer-sales.create' ? 'active' : '' }}">Customer Sale</a>
+                     </li>
+                     <li class="no-sub {{ $routeName == 'customer-sales.index' ? 'active' : '' }}"><a
+                             href="{{ route('customer-sales.index') }}"
+                             class="{{ $routeName == 'customer-sales.index' ? 'active' : '' }}">Sales History</a></li>
                  </ul>
 
                  <!-- Purchase -->
@@ -192,7 +197,8 @@
                  </ul>
 
                  <!-- Manufacturing -->
-                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}" id="manufacturingPage"
+                 <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}"
+                     id="manufacturingPage"
                      style="display: {{ $activeMenu == 'manufacturingPage' ? 'block' : 'none' }};">
                      <li class="no-sub {{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}"><a
                              href="{{ route('manufacturing_orders.create') }}"

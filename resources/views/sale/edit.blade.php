@@ -17,13 +17,14 @@
                     <h5>Edit Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('sale.update', $sale->id) }}" method="post" id="saleForm">
+                    <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm">
                         @csrf
                         @method('PUT')
                         <div class="row">
                             <div class="col-3">
                                 <select name="sale_type" id="sale_type" class="form-select mb-3">
-                                    <option value="order" {{ $sale->sale_type == 'order' ? 'selected' : '' }}>Order</option>
+                                    <option value="order" {{ $sale->sale_type == 'order' ? 'selected' : '' }}>Order
+                                    </option>
                                     <option value="RD" {{ $sale->sale_type == 'RD' ? 'selected' : '' }}>RD</option>
                                 </select>
                             </div>
@@ -63,8 +64,7 @@
                                                         value="{{ $item->price }}" min="0"
                                                         class="form-control form-control-sm text-center p-1 price"
                                                         id="price_{{ $product_id }}"></td>
-                                                <td class="p-0"><input type="number" name="qty[]"
-                                                        min="0"
+                                                <td class="p-0"><input type="number" name="qty[]" min="0"
                                                         step="any" value="{{ $item->qty }}"
                                                         class="form-control form-control-sm text-center p-1 qty"
                                                         id="qty_{{ $product_id }}"></td>
@@ -72,7 +72,8 @@
                                                         min="0" step="any"
                                                         value="{{ $item->delivered_qty ?? 0 }}"
                                                         class="form-control form-control-sm text-center p-1 delivered_qty"
-                                                        id="delivered_qty_{{ $product_id }}" {{ $sale->sale_type == 'RD' ? 'readonly' : '' }}></td>
+                                                        id="delivered_qty_{{ $product_id }}"
+                                                        {{ $sale->sale_type == 'RD' ? 'readonly' : '' }}></td>
                                                 <td class="p-0"><input type="number" name="amount[]" min="0.1"
                                                         readonly required step="any" value="{{ $item->amount }}"
                                                         class="form-control form-control-sm text-center p-1 amount"
@@ -261,16 +262,19 @@
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +
-                            '" min="0" class="form-control form-control-sm text-center p-1 price" id="price_' + id +
+                            '" min="0" class="form-control form-control-sm text-center p-1 price" id="price_' +
+                            id +
                             '"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="qty[]" min="0.1" min="0" step="any" value="0" class="form-control form-control-sm text-center p-1 qty" id="qty_' +
                             id + '"></td>';
-                        
+
                         let type = $('#sale_type').val();
                         let readOnlyAttr = type == 'RD' ? 'readonly' : '';
                         html +=
-                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" ' + readOnlyAttr + ' class="form-control form-control-sm text-center p-1 delivered_qty" id="delivered_qty_' +
+                            '<td class="p-0"><input type="number" name="delivered_qty[]" min="0" step="any" value="0" ' +
+                            readOnlyAttr +
+                            ' class="form-control form-control-sm text-center p-1 delivered_qty" id="delivered_qty_' +
                             id + '"></td>';
                         html +=
                             '<td class="p-0"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control form-control-sm text-center p-1 amount" id="amount_' +
@@ -281,7 +285,7 @@
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
-                        
+
                         // Set initial amount based on qty and price
                         let newRow = $('#row_' + id);
                         updateRowAmount(newRow);
@@ -292,12 +296,12 @@
 
         $('#sale_type').on('change', function() {
             let type = $(this).val();
-            
+
             $('#products_table tbody tr').each(function() {
                 let row = $(this);
                 let qty = row.find('.qty').val();
                 let deliveredQty = row.find('.delivered_qty');
-                
+
                 if (type == 'RD') {
                     deliveredQty.prop('readonly', true);
                     deliveredQty.val(qty);
@@ -377,10 +381,7 @@
             if (status != 'pending') {
                 var total = parseFloat($("#totalAmount").text());
                 var payment = parseFloat($("#totalPayment").text());
-                if (total != payment) {
-                    e.preventDefault();
-                    alert("Total Amount and Total Payment must be equal.");
-                }
+
             }
         });
     </script>
