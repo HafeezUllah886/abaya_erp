@@ -37,7 +37,13 @@
                  $activeMenu = 'salePage';
              } elseif (\Illuminate\Support\Str::startsWith($routeName, ['purchase'])) {
                  $activeMenu = 'purchasePage';
-             } elseif (\Illuminate\Support\Str::startsWith($routeName, ['issue_vouchers', 'receive_vouchers'])) {
+             } elseif (
+                 \Illuminate\Support\Str::startsWith($routeName, [
+                     'tailor_orders',
+                     'issue_vouchers',
+                     'receive_vouchers',
+                 ])
+             ) {
                  $activeMenu = 'manufacturingPage';
              } elseif (\Illuminate\Support\Str::startsWith($routeName, ['reports', 'profit', 'daily'])) {
                  $activeMenu = 'reportsPage';
@@ -129,8 +135,8 @@
                              'customer-sales.index' => 'Sales History',
                              'purchase.create' => 'Create Purchase',
                              'purchase.index' => 'Purchase History',
-                             'manufacturing_orders.create' => 'Create Order',
-                             'manufacturing_orders.index' => 'Order History',
+                             'tailor_orders.create' => 'Create Order',
+                             'tailor_orders.index' => 'Order History',
                              'account.create' => 'Create Account',
                              'receivings.index' => 'Receive Payments',
                              'issue.index' => 'Issue Payments',
@@ -200,14 +206,14 @@
                  <ul class="main-menu {{ $activeMenu == 'manufacturingPage' ? 'active' : '' }}"
                      id="manufacturingPage"
                      style="display: {{ $activeMenu == 'manufacturingPage' ? 'block' : 'none' }};">
-                     <li class="no-sub {{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}"><a
-                             href="{{ route('manufacturing_orders.create') }}"
-                             class="{{ $routeName == 'manufacturing_orders.create' ? 'active' : '' }}">Create
-                             Order</a>
+                     <li class="no-sub {{ $routeName == 'tailor_orders.create' ? 'active' : '' }}"><a
+                             href="{{ route('tailor_orders.create') }}"
+                             class="{{ $routeName == 'tailor_orders.create' ? 'active' : '' }}">Tailor Order
+                         </a>
                      </li>
-                     <li class="no-sub {{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}"><a
-                             href="{{ route('manufacturing_orders.index') }}"
-                             class="{{ $routeName == 'manufacturing_orders.index' ? 'active' : '' }}">Order
+                     <li class="no-sub {{ $routeName == 'tailor_orders.index' ? 'active' : '' }}"><a
+                             href="{{ route('tailor_orders.index') }}"
+                             class="{{ $routeName == 'tailor_orders.index' ? 'active' : '' }}">Order
                              History</a>
                      </li>
                  </ul>

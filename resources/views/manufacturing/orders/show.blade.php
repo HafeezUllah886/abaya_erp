@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Manufacturing Order #{{ $order->id }}</h4>
-                        <a href="{{ route('manufacturing_orders.index') }}" class="btn btn-secondary">Back to Orders</a>
+                        <a href="{{ route('tailor_orders.index') }}" class="btn btn-secondary">Back to Orders</a>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">

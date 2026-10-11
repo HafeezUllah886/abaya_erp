@@ -128,7 +128,7 @@ class ManufacturingOrderController extends Controller
             }
         }
 
-        return redirect()->route('manufacturing_orders.index')->with('success', 'Manufacturing Order Created Successfully');
+        return redirect()->route('tailor_orders.index')->with('success', 'Manufacturing Order Created Successfully');
     }
 
     public function show(ManufacturingOrder $order)
@@ -238,7 +238,7 @@ class ManufacturingOrderController extends Controller
             }
         }
 
-        return redirect()->route('manufacturing_orders.index')->with('success', 'Manufacturing Order Updated Successfully');
+        return redirect()->route('tailor_orders.index')->with('success', 'Manufacturing Order Updated Successfully');
     }
 
     public function destroy(ManufacturingOrder $order)
@@ -249,6 +249,6 @@ class ManufacturingOrderController extends Controller
         $order->materials()->delete();
         $order->delete();
 
-        return redirect()->route('manufacturing_orders.index')->with('success', 'Manufacturing Order Deleted Successfully');
+        return redirect()->route('tailor_orders.index')->with('success', 'Manufacturing Order Deleted Successfully');
     }
 }

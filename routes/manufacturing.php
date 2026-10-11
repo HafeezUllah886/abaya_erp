@@ -1,8 +1,7 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\IssueVoucherController;
-use App\Http\Controllers\ReceiveVoucherController;
+
 use App\Http\Controllers\ManufacturingOrderController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     // New Combined Manufacturing Orders
@@ -13,4 +12,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/tailor_orders/{order}/edit', [ManufacturingOrderController::class, 'edit'])->name('tailor_orders.edit');
     Route::post('/tailor_orders/{order}/update', [ManufacturingOrderController::class, 'update'])->name('tailor_orders.update');
     Route::get('/tailor_orders/{order}/delete', [ManufacturingOrderController::class, 'destroy'])->name('tailor_orders.delete');
-    
+});

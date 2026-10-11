@@ -7,10 +7,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Manufacturing Orders</h4>
-                        <a href="{{ route('manufacturing_orders.create') }}" class="btn btn-primary">Create New Order</a>
+                        <a href="{{ route('tailor_orders.create') }}" class="btn btn-primary">Create New Order</a>
                     </div>
                     <div class="card-body">
-                        <form method="GET" action="{{ route('manufacturing_orders.index') }}" class="mb-4">
+                        <form method="GET" action="{{ route('tailor_orders.index') }}" class="mb-4">
                             <div class="row">
                                 <div class="col-md-3">
                                     <input type="date" name="from" class="form-control" value="{{ $from }}">
@@ -68,11 +68,11 @@
                                         </td>
                                         <td>{{ $order->notes }}</td>
                                         <td>
-                                            <a href="{{ route('manufacturing_orders.show', $order->id) }}"
+                                            <a href="{{ route('tailor_orders.show', $order->id) }}"
                                                 class="btn btn-sm btn-info">View</a>
-                                            <a href="{{ route('manufacturing_orders.edit', $order->id) }}"
+                                            <a href="{{ route('tailor_orders.edit', $order->id) }}"
                                                 class="btn btn-sm btn-primary">Edit</a>
-                                            <a href="{{ route('manufacturing_orders.delete', $order->id) }}"
+                                            <a href="{{ route('tailor_orders.delete', $order->id) }}"
                                                 class="btn btn-sm btn-danger"
                                                 onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
                                         </td>
