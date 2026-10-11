@@ -11,7 +11,7 @@
     <!-- Top Balances Row -->
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm bg-primary-light">
+            <a href="{{ route('account.index', ['filter' => 'Business']) }}" class="card dashboard-card h-100 border-0 shadow-sm bg-primary-light text-decoration-none">
                 <div class="card-body p-4 d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Business Balance</p>
@@ -21,10 +21,10 @@
                         <i class="ti ti-building-bank f-s-24"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm bg-success-light">
+            <a href="{{ route('account.index', ['filter' => 'Customer']) }}" class="card dashboard-card h-100 border-0 shadow-sm bg-success-light text-decoration-none">
                 <div class="card-body p-4 d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Customer Receivables</p>
@@ -34,10 +34,10 @@
                         <i class="ti ti-arrow-down-right f-s-24"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm bg-warning-light">
+            <a href="{{ route('account.index', ['filter' => 'Supplier']) }}" class="card dashboard-card h-100 border-0 shadow-sm bg-warning-light text-decoration-none">
                 <div class="card-body p-4 d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Supplier Payables</p>
@@ -47,10 +47,10 @@
                         <i class="ti ti-arrow-up-right f-s-24"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm bg-info-light">
+            <a href="{{ route('customer-sales.index', ['status' => 'pending']) }}" class="card dashboard-card h-100 border-0 shadow-sm bg-info-light text-decoration-none">
                 <div class="card-body p-4 d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted text-uppercase f-w-600 f-s-12 mb-1">Pending Orders</p>
@@ -60,7 +60,7 @@
                         <i class="ti ti-truck-delivery f-s-24"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -71,36 +71,36 @@
         </div>
         
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
+            <a href="{{ route('customer-sales.index') }}" class="card dashboard-card border-0 shadow-sm h-100 text-decoration-none">
                 <div class="card-body p-3">
                     <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Sales</p>
                     <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthSales, 2) }}</h4>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
+            <a href="{{ route('purchase.index') }}" class="card dashboard-card border-0 shadow-sm h-100 text-decoration-none">
                 <div class="card-body p-3">
                     <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Purchases</p>
                     <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthPurchases, 2) }}</h4>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
+            <a href="{{ route('reportExpense') }}" class="card dashboard-card border-0 shadow-sm h-100 text-decoration-none">
                 <div class="card-body p-3">
                     <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Expenses</p>
                     <h4 class="mb-0 text-dark f-w-700">{{ number_format($currentMonthExpenses, 2) }}</h4>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100 {{ $currentMonthProfit >= 0 ? 'border-success border-bottom border-3' : 'border-danger border-bottom border-3' }}">
+            <a href="{{ route('reports.profit_loss') }}" class="card dashboard-card border-0 shadow-sm h-100 text-decoration-none {{ $currentMonthProfit >= 0 ? 'border-success border-bottom border-3' : 'border-danger border-bottom border-3' }}">
                 <div class="card-body p-3">
                     <p class="text-muted text-uppercase f-w-600 f-s-11 mb-1">Monthly Net Profit</p>
                     <h4 class="mb-0 {{ $currentMonthProfit >= 0 ? 'text-success' : 'text-danger' }} f-w-800">{{ number_format($currentMonthProfit, 2) }}</h4>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -121,8 +121,9 @@
         <!-- Top 10 Products -->
         <div class="col-xl-4 mb-4">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white pt-4 pb-2 border-0">
+                <div class="card-header bg-white pt-4 pb-2 border-0 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 f-w-700 text-dark">Top 10 Products (This Month)</h6>
+                    <a href="{{ route('products.index', ['type' => 'Ready Made']) }}" class="btn btn-sm btn-light text-primary f-s-12">View All</a>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
@@ -239,6 +240,16 @@
     .bg-warning-light { background-color: rgba(255, 193, 7, 0.08) !important; }
     .bg-danger-light { background-color: rgba(220, 53, 69, 0.08) !important; }
     .bg-info-light { background-color: rgba(13, 202, 240, 0.08) !important; }
+
+    .dashboard-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        display: block;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
+    }
 </style>
 @endsection
 
