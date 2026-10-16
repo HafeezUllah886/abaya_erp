@@ -359,12 +359,12 @@ class SaleController extends Controller
             DB::commit();
             session()->forget('confirmed_password');
 
-            return redirect()->route('sale.index')->with('success', 'Sale Deleted');
+            return redirect()->route('customer-sales.index')->with('success', 'Sale Deleted');
         } catch (Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');
 
-            return redirect()->route('sale.index')->with('error', $e->getMessage());
+            return redirect()->route('customer-sales.index')->with('error', $e->getMessage());
         }
     }
 
@@ -440,6 +440,6 @@ class SaleController extends Controller
             }
         }
 
-        return redirect()->route('sale.index')->with('success', 'Delivery and payment updated successfully.');
+        return redirect()->route('customer-sales.index')->with('success', 'Delivery and payment updated successfully.');
     }
 }
