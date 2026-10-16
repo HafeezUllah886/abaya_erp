@@ -7,7 +7,7 @@
                     <h5>Create Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm">
+                    <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm" class="prevent-double-submit">
 
                         @csrf
                         <div class="row">

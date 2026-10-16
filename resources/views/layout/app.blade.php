@@ -227,6 +227,86 @@
     </script>
     @yield('page-js')
 
-</body>
+    <!-- Double Submission Prevention for Slow Internet -->
+    <script>
+        $(document).ready(function() {
+            // Block repeat clicks on submit buttons while form is submitting
+            $(document).on('click', 'form button[type="submit"], form input[type="submit"]', function(e) {
+                var $form = $(this).closest('form');
+                if ($form.length && $form.data('is-submitting') === true) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
+            // Handle non-GET form submissions
+            $(document).on('submit', 'form', function(e) {
+                var $form = $(this);
+                var method = ($form.attr('method') || 'GET').toUpperCase();
+
+                // Only intercept non-GET forms (or forms explicitly marked with .prevent-double-submit)
+                if (method === 'GET' && !$form.hasClass('prevent-double-submit')) {
+                    return;
+                }
+
+                // If custom validation cancelled submission, do not proceed
+                if (e.isDefaultPrevented()) {
+                    return;
+                }
+
+                // If native HTML5 constraint validation failed, do not proceed
+                if (this.checkValidity && !this.checkValidity()) {
+                    return;
+                }
+
+                // If already submitted and waiting for server response, block duplicate submission
+                if ($form.data('is-submitting') === true) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Mark form as actively submitting
+                $form.data('is-submitting', true);
+
+                // Find submit button(s) in this form
+                var $submitButtons = $form.find('button[type="submit"], input[type="submit"]');
+
+                // Stop further clicks immediately
+                $submitButtons.css('pointer-events', 'none');
+
+                // Slightly defer hiding/disabling so the browser finishes dispatching the native submit
+                setTimeout(function() {
+                    $submitButtons.each(function() {
+                        var $btn = $(this);
+                        if ($btn.next('.double-submit-spinner-btn').length === 0) {
+                            $btn.hide();
+                            $btn.prop('disabled', true);
+
+                            var btnClass = $btn.attr('class') || 'btn btn-primary';
+                            var loadingText = $btn.data('loading-text') || 'Please wait, submitting...';
+
+                            var spinnerBtn = $(
+                                '<button type="button" class="' + btnClass + ' disabled double-submit-spinner-btn" disabled style="pointer-events: none; cursor: not-allowed;">' +
+                                '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' +
+                                loadingText +
+                                '</button>'
+                            );
+                            spinnerBtn.insertAfter($btn);
+                        }
+                    });
+                }, 10);
+            });
+
+            // Restore buttons if restored from browser bfcache / Back button
+            $(window).on('pageshow', function() {
+                $('form').each(function() {
+                    var $form = $(this);
+                    $form.data('is-submitting', false);
+                    $form.find('.double-submit-spinner-btn').remove();
+                    $form.find('button[type="submit"], input[type="submit"]').show().prop('disabled', false).css('pointer-events', '');
+                });
+            });
+        });
+    </script>
+</body>
 </html>

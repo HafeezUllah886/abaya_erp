@@ -7,7 +7,7 @@
                     <h5>Deliver Demand #{{ $demand->id }} ({{ $demand->customer->title }})</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('demand.deliverStore', $demand->id) }}" method="post" id="deliverForm">
+                    <form action="{{ route('demand.deliverStore', $demand->id) }}" method="post" id="deliverForm" class="prevent-double-submit">
                         @csrf
                         <div class="row">
                             <div class="col-12">

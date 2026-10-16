@@ -7,7 +7,7 @@
                     <h5>Deliver & Receive Payment (Sale #{{ $sale->id }})</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('sale.deliver.store', $sale->id) }}" method="post" id="deliverForm">
+                    <form action="{{ route('sale.deliver.store', $sale->id) }}" method="post" id="deliverForm" class="prevent-double-submit">
                         @csrf
                         <div class="row">
                             <div class="col-12">

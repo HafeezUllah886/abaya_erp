@@ -9,7 +9,7 @@
                         <h4 class="card-title">Create Manufacturing Order</h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('tailor_orders.store') }}" method="POST">
+                        <form action="{{ route('tailor_orders.store') }}" method="POST" class="prevent-double-submit">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-3">

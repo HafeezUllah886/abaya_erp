@@ -17,7 +17,7 @@
                     <h5>Edit Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm">
+                    <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm" class="prevent-double-submit">
                         @csrf
                         @method('PUT')
                         <div class="row">

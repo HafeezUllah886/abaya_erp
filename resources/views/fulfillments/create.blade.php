@@ -7,7 +7,7 @@
                     <h5>Create Order Fulfillment</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('fulfillments.store') }}" method="post">
+                    <form action="{{ route('fulfillments.store') }}" method="post" class="prevent-double-submit">
                         @csrf
                         <div class="row g-1">
                             <div class="col-12">
