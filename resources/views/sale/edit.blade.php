@@ -20,13 +20,23 @@
                     <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm" class="prevent-double-submit">
                         @csrf
                         @method('PUT')
-                        <div class="row">
-                            <div class="col-3">
-                                <select name="sale_type" id="sale_type" class="form-select mb-3">
-                                    <option value="order" {{ $sale->sale_type == 'order' ? 'selected' : '' }}>Order
-                                    </option>
-                                    <option value="RD" {{ $sale->sale_type == 'RD' ? 'selected' : '' }}>RD</option>
-                                </select>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="bill_number" class="form-label">Bill Number</label>
+                                    <input type="number" name="bill_number" id="bill_number" required
+                                        value="{{ old('bill_number', $sale->bill_number) }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="sale_type" class="form-label">Sale Type</label>
+                                    <select name="sale_type" id="sale_type" class="form-select">
+                                        <option value="order" {{ $sale->sale_type == 'order' ? 'selected' : '' }}>Order
+                                        </option>
+                                        <option value="RD" {{ $sale->sale_type == 'RD' ? 'selected' : '' }}>RD</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">

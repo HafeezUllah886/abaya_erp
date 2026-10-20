@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card ">
                 <div class="card-header d-flex justify-content-between">
-                    <h5>Deliver & Receive Payment (Sale #{{ $sale->id }})</h5>
+                    <h5>Deliver & Receive Payment (Sale #{{ $sale->id }}@if ($sale->bill_number) / Bill #{{ $sale->bill_number }}@endif)</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('sale.deliver.store', $sale->id) }}" method="post" id="deliverForm" class="prevent-double-submit">

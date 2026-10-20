@@ -43,13 +43,16 @@ class SaleController extends Controller
                 $query->where('customer_id', $customer);
             })
             ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('id', $search)
-                        ->orWhere('customer_name', 'like', "%{$search}%")
-                        ->orWhere('contact', 'like', "%{$search}%")
-                        ->orWhereHas('customer', function ($q2) use ($search) {
-                            $q2->where('title', 'like', "%{$search}%")
-                                ->orWhere('contact', 'like', "%{$search}%");
+                $term = trim($search);
+                $cleanTerm = ltrim($term, '#');
+                $query->where(function ($q) use ($term, $cleanTerm) {
+                    $q->where('id', $cleanTerm)
+                        ->orWhere('bill_number', 'like', "%{$cleanTerm}%")
+                        ->orWhere('customer_name', 'like', "%{$term}%")
+                        ->orWhere('contact', 'like', "%{$term}%")
+                        ->orWhereHas('customer', function ($q2) use ($term) {
+                            $q2->where('title', 'like', "%{$term}%")
+                                ->orWhere('contact', 'like', "%{$term}%");
                         });
                 });
             })
@@ -84,8 +87,9 @@ class SaleController extends Controller
         $products = products::active()->ready()->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
+        $bill_number = (sale::max('bill_number') ?? 0) + 1;
 
-        return view('sale.create', compact('products', 'customers', 'accounts'));
+        return view('sale.create', compact('products', 'customers', 'accounts', 'bill_number'));
     }
 
     /**
@@ -102,6 +106,7 @@ class SaleController extends Controller
             $ref = getRef();
             $sale = sale::create(
                 [
+                    'bill_number' => $request->bill_number ?: ((sale::max('bill_number') ?? 0) + 1),
                     'customer_id' => $request->customer_id,
                     'customer_name' => $request->customer_name,
                     'contact' => $request->contact,
@@ -238,6 +243,7 @@ class SaleController extends Controller
 
             $sale->update(
                 [
+                    'bill_number' => $request->bill_number ?? $sale->bill_number,
                     'customer_id' => $request->customer_id,
                     'customer_name' => $request->customer_name,
                     'contact' => $request->contact,

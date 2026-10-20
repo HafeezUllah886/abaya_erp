@@ -3,8 +3,11 @@
     <div class="row">
         <div class="col-12">
             <div class="card ">
-                <div class="card-header d-flex justify-content-between">
-                    <h5>Sales</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Sales @if (request('search'))
+                        <span class="badge bg-secondary f-s-12 ms-2">Search: "{{ request('search') }}"</span>
+                        <a href="{{ route('customer-sales.index') }}" class="btn btn-sm btn-outline-danger ms-2">Clear</a>
+                    @endif</h5>
                     <button aria-controls="canvasEnd" class="btn btn-primary" data-bs-target="#canvasEnd"
                         data-bs-toggle="offcanvas" type="button">Filter</button>
                 </div>
@@ -14,6 +17,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 10px;">Inv #</th>
+                                    <th class="text-start">Bill #</th>
                                     <th class="text-start">Date</th>
                                     <th class="text-start">Customer</th>
                                     <th class="text-start">Contact</th>
@@ -47,6 +51,7 @@
                                     @endphp
                                     <tr>
                                         <td class="text-dark" style="width: 10px;">{{ $sale->id }}</td>
+                                        <td class="text-start f-w-600">{{ $sale->bill_number ?? '-' }}</td>
                                         <td class="text-start">{{ date('d-m-Y', strtotime($sale->date)) }}</td>
                                         <td class="text-start">
                                             {{ $sale->customer_id == 2 ? $sale->customer_name : $sale->customer->title }}

@@ -51,10 +51,15 @@
                                     RECEIPT DETAILS / <span class="arabic-text">تفاصيل الإيصال</span>
                                 </p>
                                 <div class="d-flex justify-content-between mb-1 f-s-13">
+                                    <span class="text-dark">Bill No. / <span class="arabic-text">رقم
+                                            الفاتورة</span></span>
+                                    <strong class="text-dark">#{{ $sale->bill_number ?? $sale->id }}</strong>
+                                </div>
+                                {{--  <div class="d-flex justify-content-between mb-1 f-s-13">
                                     <span class="text-dark">Receipt No. / <span class="arabic-text">رقم
                                             الإيصال</span></span>
                                     <strong class="text-dark">#{{ $sale->id }}</strong>
-                                </div>
+                                </div> --}}
                                 <div class="d-flex justify-content-between mb-1 f-s-13">
                                     <span class="text-dark">Date / <span class="arabic-text">التاريخ</span></span>
                                     <strong class="text-dark">{{ date('d M Y', strtotime($sale->date)) }}</strong>
@@ -110,39 +115,39 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top">Sub Total / <span
+                                        <td colspan="6" class="text-end border-top p-1">Sub Total / <span
                                                 class="arabic-text">المجموع الفرعي</span></td>
-                                        <td class="text-end text-dark border-top f-s-14">
+                                        <td class="text-end text-dark border-top f-s-14 p-1">
                                             {{ number_format($sale->details->sum('amount'), 2) }}
                                         </td>
                                     </tr>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top">
+                                        <td colspan="6" class="text-end border-top p-1">
                                             VAT ({{ $sale->vat ?? 0 }}%) <span class="arabic-text">ضريبة القيمة المضافة
 
                                         </td>
-                                        <td class="text-end text-dark border-top f-s-14">
+                                        <td class="text-end text-dark border-top f-s-14 p-1">
                                             {{ number_format($sale->vat_amount ?? 0, 2) }}
                                         </td>
                                     </tr>
                                     <tr class="table-light f-w-700 text-dark">
-                                        <td colspan="6" class="text-end border-top">Grand Total <span
+                                        <td colspan="6" class="text-end border-top p-1">Grand Total <span
                                                 class="arabic-text">الإجمالي الكلي</span></td>
-                                        <td class="text-end text-primary f-w-700 border-top f-s-16">
+                                        <td class="text-end text-primary f-w-700 border-top f-s-16 p-1">
                                             {{ number_format($sale->total_bill, 2) }}
                                         </td>
                                     </tr>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top">Total Paid / <span
+                                        <td colspan="6" class="text-end border-top p-1">Total Paid / <span
                                                 class="arabic-text">إجمالي المدفوع</span></td>
-                                        <td class="text-end text-success f-w-700 border-top f-s-14">
+                                        <td class="text-end text-success f-w-700 border-top f-s-14 p-1">
                                             {{ number_format($sale->payments->sum('amount'), 2) }}
                                         </td>
                                     </tr>
                                     <tr class="table-light f-w-700 text-dark">
-                                        <td colspan="6" class="text-end border-top">Balance / <span
+                                        <td colspan="6" class="text-end border-top p-1">Balance / <span
                                                 class="arabic-text">الرصيد المتبقي</span></td>
-                                        <td class="text-end text-danger f-w-700 border-top f-s-16">
+                                        <td class="text-end text-danger f-w-700 border-top f-s-16 p-1">
                                             {{ number_format($sale->total_bill - $sale->payments->sum('amount'), 2) }}
                                         </td>
                                     </tr>

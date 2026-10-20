@@ -101,7 +101,7 @@
                                             class="mb-0">
                                             <div class="input-group input-group-sm">
                                                 <input type="text" name="search" class="form-control"
-                                                    placeholder="Search sales..." value="{{ request('search') }}">
+                                                    placeholder="Search sales (bill #, name)..." value="{{ request('search') }}">
                                                 <button class="btn btn-primary" type="submit"><i
                                                         class="ti ti-search"></i></button>
                                             </div>

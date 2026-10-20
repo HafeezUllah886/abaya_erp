@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('bill_number');
             $table->foreignId('customer_id')->nullable()->constrained('accounts');
             $table->date('date');
             $table->enum('sale_type', ['order', 'RD'])->default('order');

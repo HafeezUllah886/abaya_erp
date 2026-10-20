@@ -10,12 +10,22 @@
                     <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm" class="prevent-double-submit">
 
                         @csrf
-                        <div class="row">
-                            <div class="col-3">
-                                <select name="sale_type" id="sale_type" class="form-select mb-3">
-                                    <option value="order">Order</option>
-                                    <option value="RD">RD</option>
-                                </select>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="bill_number" class="form-label">Bill Number</label>
+                                    <input type="number" name="bill_number" id="bill_number" required
+                                        value="{{ old('bill_number', $bill_number) }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="sale_type" class="form-label">Sale Type</label>
+                                    <select name="sale_type" id="sale_type" class="form-select">
+                                        <option value="order">Order</option>
+                                        <option value="RD">RD</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
