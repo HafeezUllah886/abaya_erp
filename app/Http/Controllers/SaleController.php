@@ -53,6 +53,9 @@ class SaleController extends Controller
                         ->orWhereHas('customer', function ($q2) use ($term) {
                             $q2->where('title', 'like', "%{$term}%")
                                 ->orWhere('contact', 'like', "%{$term}%");
+                        })
+                        ->orWhereHas('details', function ($q3) use ($term) {
+                            $q3->where('model', 'like', "%{$term}%");
                         });
                 });
             })
@@ -129,6 +132,7 @@ class SaleController extends Controller
                     $price = $request->price[$key];
                     $amount = $request->amount[$key];
                     $delivered_qty = $request->delivered_qty[$key] ?? 0;
+                    $model = $request->model[$key] ?? null;
 
                     if ($request->sale_type == 'RD') {
                         $delivered_qty = $qty;
@@ -140,6 +144,7 @@ class SaleController extends Controller
                         [
                             'sale_id' => $sale->id,
                             'product_id' => $id,
+                            'model' => $model,
                             'price' => $price,
                             'qty' => $qty,
                             'delivered_qty' => $delivered_qty,
@@ -267,6 +272,7 @@ class SaleController extends Controller
                     $price = $request->price[$key];
                     $amount = $request->amount[$key];
                     $delivered_qty = $request->delivered_qty[$key] ?? 0;
+                    $model = $request->model[$key] ?? null;
 
                     if ($request->sale_type == 'RD') {
                         $delivered_qty = $qty;
@@ -278,6 +284,7 @@ class SaleController extends Controller
                         [
                             'sale_id' => $sale->id,
                             'product_id' => $id,
+                            'model' => $model,
                             'price' => $price,
                             'qty' => $qty,
                             'delivered_qty' => $delivered_qty,

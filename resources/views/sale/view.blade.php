@@ -83,19 +83,21 @@
                             <table class="table table-striped table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 60px;">No<br><span class="arabic-text">الرقم</span>
+                                        <th scope="col" style="width: 50px;">No<br><span class="arabic-text">الرقم</span>
                                         </th>
-                                        <th scope="col" style="width: 280px;">Product<br><span
+                                        <th scope="col" style="width: 250px;">Product<br><span
                                                 class="arabic-text">المنتج</span></th>
-                                        <th scope="col" class="text-end" style="width: 140px;">Price<br><span
+                                        <th scope="col" style="width: 120px;">Model<br><span
+                                                class="arabic-text">الموديل</span></th>
+                                        <th scope="col" class="text-end" style="width: 130px;">Price<br><span
                                                 class="arabic-text">السعر</span></th>
-                                        <th scope="col" class="text-end" style="width: 130px;">Quantity<br><span
+                                        <th scope="col" class="text-end" style="width: 110px;">Quantity<br><span
                                                 class="arabic-text">الكمية</span></th>
-                                        <th scope="col" class="text-end" style="width: 130px;">Delivered<br><span
+                                        <th scope="col" class="text-end" style="width: 110px;">Delivered<br><span
                                                 class="arabic-text">تم التسليم</span></th>
-                                        <th scope="col" class="text-center" style="width: 100px;">Unit<br><span
+                                        <th scope="col" class="text-center" style="width: 90px;">Unit<br><span
                                                 class="arabic-text">الوحدة</span></th>
-                                        <th scope="col" class="text-end" style="width: 160px;">Total<br><span
+                                        <th scope="col" class="text-end" style="width: 140px;">Total<br><span
                                                 class="arabic-text">الإجمالي</span></th>
                                     </tr>
                                 </thead>
@@ -104,6 +106,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="f-w-600 text-dark">{{ $item->product->name }}</td>
+                                            <td>{{ $item->model ?? '-' }}</td>
                                             <td class="text-end">{{ number_format($item->price, 2) }}</td>
                                             <td class="text-end">{{ number_format($item->qty, 2) }}</td>
                                             <td class="text-end">{{ number_format($item->delivered_qty, 2) }}</td>
@@ -115,14 +118,14 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top p-1">Sub Total / <span
+                                        <td colspan="7" class="text-end border-top p-1">Sub Total / <span
                                                 class="arabic-text">المجموع الفرعي</span></td>
                                         <td class="text-end text-dark border-top f-s-14 p-1">
                                             {{ number_format($sale->details->sum('amount'), 2) }}
                                         </td>
                                     </tr>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top p-1">
+                                        <td colspan="7" class="text-end border-top p-1">
                                             VAT ({{ $sale->vat ?? 0 }}%) <span class="arabic-text">ضريبة القيمة المضافة
 
                                         </td>
@@ -131,21 +134,21 @@
                                         </td>
                                     </tr>
                                     <tr class="table-light f-w-700 text-dark">
-                                        <td colspan="6" class="text-end border-top p-1">Grand Total <span
+                                        <td colspan="7" class="text-end border-top p-1">Grand Total <span
                                                 class="arabic-text">الإجمالي الكلي</span></td>
                                         <td class="text-end text-primary f-w-700 border-top f-s-16 p-1">
                                             {{ number_format($sale->total_bill, 2) }}
                                         </td>
                                     </tr>
                                     <tr class="text-dark">
-                                        <td colspan="6" class="text-end border-top p-1">Total Paid / <span
+                                        <td colspan="7" class="text-end border-top p-1">Total Paid / <span
                                                 class="arabic-text">إجمالي المدفوع</span></td>
                                         <td class="text-end text-success f-w-700 border-top f-s-14 p-1">
                                             {{ number_format($sale->payments->sum('amount'), 2) }}
                                         </td>
                                     </tr>
                                     <tr class="table-light f-w-700 text-dark">
-                                        <td colspan="6" class="text-end border-top p-1">Balance / <span
+                                        <td colspan="7" class="text-end border-top p-1">Balance / <span
                                                 class="arabic-text">الرصيد المتبقي</span></td>
                                         <td class="text-end text-danger f-w-700 border-top f-s-16 p-1">
                                             {{ number_format($sale->total_bill - $sale->payments->sum('amount'), 2) }}

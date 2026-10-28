@@ -14,7 +14,8 @@
                                 <h6 class="mb-3">Deliver Products</h6>
                                 <table class="table table-striped table-hover">
                                     <thead>
-                                        <th width="40%">Item</th>
+                                        <th width="30%">Item</th>
+                                        <th width="15%">Model</th>
                                         <th class="text-center">Ordered Qty</th>
                                         <th class="text-center">Already Delivered</th>
                                         <th class="text-center">Remaining Qty</th>
@@ -28,6 +29,7 @@
                                             @endphp
                                             <tr>
                                                 <td class="p-1">{{ $item->product->name }}</td>
+                                                <td class="p-1">{{ $item->model ?? '-' }}</td>
                                                 <td class="text-center p-1">{{ $item->qty }}</td>
                                                 <td class="text-center p-1">{{ $item->delivered_qty }}</td>
                                                 <td class="text-center p-1">{{ $remaining }}</td>

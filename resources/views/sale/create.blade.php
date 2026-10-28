@@ -33,6 +33,7 @@
                                 <thead>
                                     <tr>
                                         <th class="p-1">Product</th>
+                                        <th class="p-1">Model</th>
                                         <th class="text-center p-1">Price</th>
                                         <th class="text-center p-1">Qty</th>
                                         <th class="text-center p-1">Delivered</th>
@@ -50,6 +51,9 @@
                                                     <option value="{{ $p->id }}">{{ $p->name }}</option>
                                                 @endforeach
                                             </select>
+                                        </td>
+                                        <td class="p-1">
+                                            <input type="text" name="model[]" class="form-control">
                                         </td>
 
                                         <td class="p-1"><input type="number" name="price[]" class="form-control price"
@@ -193,6 +197,7 @@
             $('#add_product').on('click', function() {
                 var newRow = $('#products_table tbody tr:first').clone();
                 newRow.find('input').val(0);
+                newRow.find('input[name="model[]"]').val('');
                 newRow.find('select[name="id[]"]').val('');
                 let type = $('#sale_type').val();
                 if (type == 'RD') {
@@ -240,6 +245,7 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="p-1">' + product.name + '</td>';
+                        html += '<td class="p-1"><input type="text" name="model[]" class="form-control"></td>';
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +

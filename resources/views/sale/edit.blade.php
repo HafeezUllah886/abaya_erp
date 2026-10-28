@@ -56,6 +56,7 @@
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <th width="30%">Item</th>
+                                        <th class="p-1">Model</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Qty</th>
                                         <th class="text-center">Delivered</th>
@@ -70,6 +71,9 @@
                                             @endphp
                                             <tr id="row_{{ $product_id }}">
                                                 <td class="p-1">{{ $item->product->name }}</td>
+                                                <td class="p-1"><input type="text" name="model[]"
+                                                        value="{{ $item->model }}"
+                                                        class="form-control form-control-sm"></td>
                                                 <td class="p-0"><input type="number" name="price[]" step="any"
                                                         value="{{ $item->price }}" min="0"
                                                         class="form-control form-control-sm text-center p-1 price"
@@ -91,11 +95,12 @@
                                                 <td class="p-0"> <span class="btn btn-sm btn-danger"
                                                         onclick="deleteRow({{ $product_id }})">X</span> </td>
                                                 <input type="hidden" name="id[]" value="{{ $product_id }}">
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="4" class="text-end">Total</th>
+                                            <th colspan="5" class="text-end">Total</th>
                                             <th class="text-end" id="totalAmount">{{ number_format($sale->total, 2) }}</th>
                                             <th></th>
                                         </tr>
@@ -269,6 +274,7 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="p-1">' + product.name + '</td>';
+                        html += '<td class="p-1"><input type="text" name="model[]" class="form-control form-control-sm"></td>';
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +
