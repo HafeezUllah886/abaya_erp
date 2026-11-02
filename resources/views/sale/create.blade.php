@@ -7,7 +7,8 @@
                     <h5>Create Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm" class="prevent-double-submit">
+                    <form action="{{ route('customer-sales.store') }}" method="post" id="saleForm"
+                        class="prevent-double-submit">
 
                         @csrf
                         <div class="row mb-3">
@@ -45,7 +46,7 @@
                                 <tbody id="products_list">
                                     <tr>
                                         <td class="p-1">
-                                            <select name="id[]" class="form-control">
+                                            <select name="id[]" class="form-control product_select">
                                                 <option value="">Select Product</option>
                                                 @foreach ($products as $p)
                                                     <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -53,7 +54,9 @@
                                             </select>
                                         </td>
                                         <td class="p-1">
-                                            <input type="text" name="model[]" class="form-control">
+                                            <select name="model[]" class="form-control model_select">
+                                                <option value="">Select Model</option>
+                                            </select>
                                         </td>
 
                                         <td class="p-1"><input type="number" name="price[]" class="form-control price"
@@ -197,8 +200,8 @@
             $('#add_product').on('click', function() {
                 var newRow = $('#products_table tbody tr:first').clone();
                 newRow.find('input').val(0);
-                newRow.find('input[name="model[]"]').val('');
                 newRow.find('select[name="id[]"]').val('');
+                newRow.find('select[name="model[]"]').empty().append('<option value="">Select Model</option>');
                 let type = $('#sale_type').val();
                 if (type == 'RD') {
                     newRow.find('.delivered_qty').prop('readonly', true);
@@ -206,6 +209,33 @@
                     newRow.find('.delivered_qty').prop('readonly', false);
                 }
                 $('#products_table tbody').append(newRow);
+            });
+
+            var productsData = @json($products);
+
+            $(document).on('change', 'select[name="id[]"]', function() {
+                var productId = $(this).val();
+                var row = $(this).closest('tr');
+                var modelSelect = row.find('select[name="model[]"]');
+
+                modelSelect.empty();
+                modelSelect.append('<option value="">Select Model</option>');
+
+                var product = productsData.find(function(p) {
+                    return p.id == productId;
+                });
+
+                if (product) {
+                    if (product.models && product.models.length > 0) {
+                        $.each(product.models, function(index, model) {
+                            modelSelect.append('<option value="' + model.model_number + '">' + model.model_number + '</option>');
+                        });
+                    }
+                    if (product.price) {
+                        row.find('.price').val(product.price);
+                        updateRowAmount(row);
+                    }
+                }
             });
         });
 
@@ -245,7 +275,21 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="p-1">' + product.name + '</td>';
-                        html += '<td class="p-1"><input type="text" name="model[]" class="form-control"></td>';
+
+                        var modelOptions = '<option value="">Select Model</option>';
+                        var prodModels = (product.models && product.models.length > 0) ? product.models : [];
+                        if (prodModels.length === 0 && typeof productsData !== 'undefined') {
+                            var pData = productsData.find(function(p) { return p.id == id; });
+                            if (pData && pData.models) {
+                                prodModels = pData.models;
+                            }
+                        }
+                        if (prodModels.length > 0) {
+                            $.each(prodModels, function(index, model) {
+                                modelOptions += '<option value="' + model.model_number + '">' + model.model_number + '</option>';
+                            });
+                        }
+                        html += '<td class="p-1"><select name="model[]" class="form-control model_select">' + modelOptions + '</select></td>';
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +

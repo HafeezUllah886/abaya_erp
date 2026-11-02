@@ -25,4 +25,9 @@ class products extends Model
     {
         return $query->where('type', 'Raw Material');
     }
+
+    public function models()
+    {
+        return $this->hasMany(models::class, 'product_id');
+    }
 }

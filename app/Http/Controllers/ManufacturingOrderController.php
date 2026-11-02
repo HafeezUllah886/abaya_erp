@@ -35,7 +35,7 @@ class ManufacturingOrderController extends Controller
     public function create()
     {
         $raw_materials = products::rawMaterial()->active()->get();
-        $finished_products = products::ready()->active()->get();
+        $finished_products = products::ready()->active()->with('models')->get();
         $tailors = accounts::tailor()->get();
         $business_accounts = accounts::business()->get();
 
@@ -138,8 +138,9 @@ class ManufacturingOrderController extends Controller
 
     public function edit(ManufacturingOrder $order)
     {
+        $order->load('products.product.models');
         $raw_materials = products::active()->rawMaterial()->get();
-        $finished_products = products::active()->ready()->get();
+        $finished_products = products::active()->ready()->with('models')->get();
         $tailors = accounts::tailor()->get();
         $business_accounts = accounts::business()->get();
 

@@ -279,6 +279,12 @@
                              href="{{ route('stock-adjustments.index') }}"
                              class="{{ $routeName == 'stock-adjustments.index' ? 'active' : '' }}">Stock
                              Adjustment</a></li>
+
+                     <li class="no-sub {{ $routeName == 'models.index' ? 'active' : '' }}"><a
+                             href="{{ route('models.index') }}"
+                             class="{{ $routeName == 'models.index' ? 'active' : '' }}">Abaya Models</a></li>
+
+
                  </ul>
 
                  <!-- Reports -->

@@ -87,7 +87,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $products = products::active()->ready()->get();
+        $products = products::active()->ready()->with('models')->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
         $bill_number = (sale::max('bill_number') ?? 0) + 1;
@@ -218,7 +218,7 @@ class SaleController extends Controller
 
     public function edit(sale $sale)
     {
-        $products = products::active()->ready()->orderby('name', 'asc')->get();
+        $products = products::active()->ready()->with('models')->orderby('name', 'asc')->get();
         $customers = accounts::active()->customer()->get();
         $accounts = accounts::active()->business()->get();
 
@@ -383,7 +383,7 @@ class SaleController extends Controller
 
     public function getSignleProduct($id)
     {
-        $product = products::find($id);
+        $product = products::with('models')->find($id);
 
         return $product;
     }

@@ -2,7 +2,6 @@
 @section('content')
     <script>
         var existingProducts = [];
-
         @foreach ($sale->details as $product)
             @php
                 $product_id = $product->product_id;
@@ -17,7 +16,8 @@
                     <h5>Edit Sale</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm" class="prevent-double-submit">
+                    <form action="{{ route('customer-sales.update', $sale->id) }}" method="post" id="saleForm"
+                        class="prevent-double-submit">
                         @csrf
                         @method('PUT')
                         <div class="row mb-3">
@@ -51,7 +51,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-12">
                                 <table class="table table-striped table-hover">
                                     <thead>
@@ -67,13 +66,25 @@
                                         @foreach ($sale->details as $item)
                                             @php
                                                 $product_id = $item->product_id;
-
                                             @endphp
                                             <tr id="row_{{ $product_id }}">
                                                 <td class="p-1">{{ $item->product->name }}</td>
-                                                <td class="p-1"><input type="text" name="model[]"
-                                                        value="{{ $item->model }}"
-                                                        class="form-control form-control-sm"></td>
+                                                <td class="p-1">
+                                                    <select name="model[]"
+                                                        class="form-control form-control-sm model_select">
+                                                        <option value="">Select Model</option>
+                                                        @foreach ($item->product->models as $m)
+                                                            <option value="{{ $m->model_number }}"
+                                                                {{ $item->model == $m->model_number ? 'selected' : '' }}>
+                                                                {{ $m->model_number }}
+                                                            </option>
+                                                        @endforeach
+                                                        @if ($item->model && (! $item->product || ! $item->product->models->contains('model_number', $item->model)))
+                                                            <option value="{{ $item->model }}" selected>{{ $item->model }}</option>
+                                                        @endif
+
+                                                    </select>
+                                                </td>
                                                 <td class="p-0"><input type="number" name="price[]" step="any"
                                                         value="{{ $item->price }}" min="0"
                                                         class="form-control form-control-sm text-center p-1 price"
@@ -122,7 +133,6 @@
                                         class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="vat">VAT (%)</label>
@@ -274,7 +284,17 @@
                         var id = product.id;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="p-1">' + product.name + '</td>';
-                        html += '<td class="p-1"><input type="text" name="model[]" class="form-control form-control-sm"></td>';
+
+                        var modelOptions = '<option value="">Select Model</option>';
+                        if (product.models && product.models.length > 0) {
+                            $.each(product.models, function(index, model) {
+                                modelOptions += '<option value="' + model.model_number + '">' + model
+                                    .model_number + '</option>';
+                            });
+                        }
+                        html +=
+                            '<td class="p-1"><select name="model[]" class="form-control form-control-sm model_select">' +
+                            modelOptions + '</select></td>';
 
                         html += '<td class="p-0"><input type="number" name="price[]" step="any" value="' +
                             product.price +

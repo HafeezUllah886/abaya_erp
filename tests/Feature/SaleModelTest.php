@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\accounts;
+use App\Models\models;
 use App\Models\products;
 use App\Models\sale;
 use App\Models\sale_details;
@@ -25,14 +26,30 @@ beforeEach(function () {
         'unit' => 'Pcs',
         'is_active' => true,
     ]);
+    $this->model = models::create([
+        'product_id' => $this->product->id,
+        'model_number' => 'ROYAL-M01',
+    ]);
 });
 
-test('create sale view displays model column and input', function () {
+test('create sale view displays model column and select', function () {
     $response = $this->actingAs($this->user)->get(route('customer-sales.create'));
 
     $response->assertStatus(200);
     $response->assertSee('<th class="p-1">Model</th>', false);
-    $response->assertSee('name="model[]"', false);
+    $response->assertSee('<select name="model[]"', false);
+    $response->assertSee('ROYAL-M01');
+});
+
+test('get product endpoint returns relative models', function () {
+    $response = $this->actingAs($this->user)->get(url('sales/getproduct/'.$this->product->id));
+
+    $response->assertStatus(200);
+    $response->assertJsonPath('models.0.model_number', 'ROYAL-M01');
+
+    $purchaseResponse = $this->actingAs($this->user)->get(url('purchases/getproduct/'.$this->product->id));
+    $purchaseResponse->assertStatus(200);
+    $purchaseResponse->assertJsonPath('models.0.model_number', 'ROYAL-M01');
 });
 
 test('storing sale saves model into sale_details', function () {

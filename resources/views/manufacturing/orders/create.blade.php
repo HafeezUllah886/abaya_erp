@@ -61,7 +61,7 @@
                                 <tbody>
                                     <tr>
                                         <td class="p-1">
-                                            <select name="product_id[]" class="form-control">
+                                            <select name="product_id[]" class="form-control product_select">
                                                 <option value="">Select Product</option>
                                                 @foreach ($finished_products as $p)
                                                     <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -76,7 +76,9 @@
                                             </select>
                                         </td>
                                         <td class="p-1">
-                                            <input type="text" name="model[]" class="form-control">
+                                            <select name="model[]" class="form-control model_select">
+                                                <option value="">Select Model</option>
+                                            </select>
                                         </td>
                                         <td class="p-1"><input type="number" name="order_qty[]" class="form-control"
                                                 step="0.01" value="0"></td>
@@ -161,22 +163,35 @@
                 }
             });
 
+            var productsData = @json($finished_products);
+
             // Add Product Row
             $('#add_product').click(function() {
-                var row = `<tr>
-                <td>
-                    <select name="product_id[]" class="form-control">
-                        <option value="">Select Product</option>
-                        @foreach ($finished_products as $p)
-                            <option value="{{ $p->id }}">{{ $p->title ?? $p->name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="number" name="order_qty[]" class="form-control" step="0.01" value="0"></td>
-                <td><input type="number" name="received_qty[]" class="form-control" step="0.01" value="0"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove_row">-</button></td>
-            </tr>`;
-                $('#products_table tbody').append(row);
+                var newRow = $('#products_table tbody tr:first').clone();
+                newRow.find('input').val(0);
+                newRow.find('select[name="product_id[]"]').val('');
+                newRow.find('select[name="type[]"]').val('Order');
+                newRow.find('select[name="model[]"]').empty().append('<option value="">Select Model</option>');
+                $('#products_table tbody').append(newRow);
+            });
+
+            $(document).on('change', 'select[name="product_id[]"]', function() {
+                var productId = $(this).val();
+                var row = $(this).closest('tr');
+                var modelSelect = row.find('select[name="model[]"]');
+
+                modelSelect.empty();
+                modelSelect.append('<option value="">Select Model</option>');
+
+                var product = productsData.find(function(p) {
+                    return p.id == productId;
+                });
+
+                if (product && product.models && product.models.length > 0) {
+                    $.each(product.models, function(index, model) {
+                        modelSelect.append('<option value="' + model.model_number + '">' + model.model_number + '</option>');
+                    });
+                }
             });
 
             // Add Material Row
